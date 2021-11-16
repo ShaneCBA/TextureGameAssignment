@@ -70,6 +70,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.github.shaneCBA.game.Keyboard;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
@@ -93,12 +94,14 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 	// Create a animator that drives canvas' display() at the specified FPS.
 	FPSAnimator animator;
 	GKeyBoard keyBoard;
+	Keyboard keyboard;
 	GMouse mouse;
 
 	DrawWindow() {
 
 		mouse = new GMouse();
 		keyBoard = new GKeyBoard();
+		keyboard = Keyboard.getInstance();
 
 		GLProfile profile = GLProfile.get(GLProfile.GL2);
 		GLCapabilities capabilities = new GLCapabilities(profile);
@@ -153,10 +156,10 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 
 	// keyboard events
 	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();
-
 		if (e != null)
 		{
+			int key = e.getKeyCode();
+			keyboard.setKeyDown(key, true);
 			keyBoard.setCharPressed(e.getKeyChar());
 			keyBoard.setPressReleaseStatus(true);
 
@@ -168,6 +171,8 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 	public void keyReleased(KeyEvent e) {
 		if (e != null)
 		{
+			int key = e.getKeyCode();
+			keyboard.setKeyDown(key, false);
 			keyBoard.setPressReleaseStatus(false);
 			((GLUTCanvas) canvas).processKeyBoardEventsStop();
 		}

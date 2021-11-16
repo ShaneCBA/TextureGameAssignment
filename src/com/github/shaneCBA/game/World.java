@@ -12,34 +12,67 @@ import com.jogamp.opengl.util.texture.Texture;
 
 public class World implements GShape {
 	
-	public final static float GRAVITY = 9.8f;
+	final static boolean DEBUG = false;
+	
+	public final static float GRAVITY = 0.5f;
 	public final static int TILESIZE = 24;
 	
 	private Tile[][] tiles;
 	private int width, height; //measured in tiles
 	
 	private ArrayList<Sprite> entities;
-	
+
 	public World(Tile[][] tiles, int width, int height)
 	{
 		this.tiles = tiles;
 		this.width = width;
 		this.height = height;
+		this.tiles = new Tile[height][width];
 		entities = new ArrayList<>();
-		for (Tile[] row : tiles)
+		if (DEBUG)
 		{
-			for (Tile tile : row)
+			for (Tile[] row : this.tiles)
 			{
-				System.out.print(tile.ordinal());
+				for (Tile tile : row)
+				{
+					System.out.print(tile.ordinal());
+				}
+				System.out.println();
 			}
 			System.out.println();
 		}
-		System.out.println();
 	}
 	
+	public World(int[][] tiles, int width, int height)
+	{
+		this.tiles = new Tile[height][width];
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				this.tiles[y][x] = Tile.values()[tiles[y][x]];
+			}
+		}
+		this.width = width;
+		this.height = height;
+		entities = new ArrayList<>();
+		if (DEBUG)
+		{
+			for (Tile[] row : this.tiles)
+			{
+				for (Tile tile : row)
+				{
+					System.out.print(tile.ordinal());
+				}
+				System.out.println();
+			}
+			System.out.println();
+		}
+	}
 	public void addEntity(Sprite entity)
 	{		
 		entities.add(entity);
+		entity.setWorldInstance(this);
 	}
 	
 	@Override
@@ -48,7 +81,6 @@ public class World implements GShape {
 		{
 			for (int x = 0; x < width; x++)
 			{
-				DebugUtil.debugSquareIgnoreMatrix(gl, x*TILESIZE, y*TILESIZE);
 				drawTile(gl, x, y);
 			}
 		}
@@ -65,6 +97,8 @@ public class World implements GShape {
 
 		if (tile.getDrawable())
 		{
+//			if (tile == Tile.SOLID)
+//				DebugUtil.debugSquareIgnoreMatrix(gl, x*TILESIZE, y*TILESIZE);
 			Texture texture = tile.getTexture();
 			gl.glPushMatrix();
 			gl.glPushAttrib(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_ENABLE_BIT);
@@ -105,5 +139,21 @@ public class World implements GShape {
 			gl.glPopAttrib();
 			gl.glPopMatrix();
 		}
+	}
+	public boolean detectTileCollision(float x, float y)
+	{
+		int tileX = (int) (x/TILESIZE);
+		int tileY = (int) (y/TILESIZE);
+		if (tileX >= width || tileY >= height)
+		{
+			return true;
+		}
+		return this.tiles[tileY][tileX] == Tile.SOLID;
+	}
+	
+	public float getTileTopY(float y)
+	{
+		int tileY = (int) (y/TILESIZE);
+		return (tileY + 1)*TILESIZE;
 	}
 }

@@ -1,6 +1,7 @@
 package com.github.shaneCBA.game;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.drawing.GTextureUtil;
@@ -35,27 +36,41 @@ public class Flipbook {
 		
 		lastFrameUpdateTime = System.currentTimeMillis();
 		lastFrameUpdateCheck = lastFrameUpdateTime;
+		pages = new Texture[fileNames.length];
 		
 		for (int i = 0; i < frameCount; i++)
 		{
 			String file = fileNames[i];
+			String ext = null;
 
 			//REGEX to match the filetype at the end of the file name
-			String regexFileType = ".*\\.([a-zA-Z]+)$";
+			String regexFileType = ".*\\.([a-zA-Z0-9]+)$";
 			Pattern p = Pattern.compile(regexFileType);
 			
 			//Retrieve the file extension of the textureFile
-			String ext = p.matcher(file).group();
+			Matcher m = p.matcher(file);
+			try
+			{
+				if (m.find())
+					ext = m.group(1);
 			
-			if (ext != null)
-			{
-				ext = ext.toLowerCase();
-				pages[i] = GTextureUtil.loadTextureProjectDir(file, ext);	
+				if (ext != null)
+				{
+					ext = ext.toLowerCase();
+					pages[i] = GTextureUtil.loadTextureProjectDir(file, ext);	
+				}
+				else
+				{
+					throw new IOException("Could not find file extension",
+							new Throwable(String.format("File String at Index %d - \"%s\"", i, file)));
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				throw new IOException("Could not find file extension",
-						new Throwable(String.format("File String at Index %d - \"%s\"", i, file)));
+				System.out.println("Bad File " + file);
+				System.out.println(m.group(1));
+				e.printStackTrace();
+				System.exit(-1);
 			}
 		}
 	}
@@ -71,8 +86,13 @@ public class Flipbook {
 		long timeDelta = lastFrameUpdateCheck - lastFrameUpdateTime;
 		if (timeDelta > frameDuration)
 		{
+			//The number of frames that should have been rendered since the last update
 			int frameChange = (int) (timeDelta/frameDuration);
+			
 			currentFrame = (currentFrame + frameChange) % frameCount;
+			
+			//Store for next update
+			lastFrameUpdateTime = lastFrameUpdateCheck;
 		}
 	}
 	

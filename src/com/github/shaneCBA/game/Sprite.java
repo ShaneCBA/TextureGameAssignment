@@ -1,5 +1,6 @@
 package com.github.shaneCBA.game;
 
+import static com.jogamp.opengl.GL.GL_CW;
 import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
 import static com.jogamp.opengl.GL.GL_TRIANGLE_STRIP;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
@@ -19,13 +20,17 @@ public class Sprite implements GShape
 
 	private Flipbook[] animations;
 	
-	private int currAnimation;
+	protected int currAnimation;
 	
+	protected World worldInstance;
+	
+	protected boolean facingLeft;
+
 	//Position vector
-	private float[] pVector2f;
-	
+	protected float[] pVector2f;
+
 	//Size vector
-	private float[] sVector2f;
+	protected float[] sVector2f;
 	
 	/**
 	 * @param position Position of sprite
@@ -62,7 +67,15 @@ public class Sprite implements GShape
 		this.animations[0] = animation;
 	}
 	
-	
+	public float[] getpVector2f() {
+		return pVector2f;
+	}
+
+
+	public void setpVector2f(float[] pVector2f) {
+		this.pVector2f = pVector2f;
+	}
+
 	@Override
 	public void render(GL2 gl) {
 		gl.glPushAttrib(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_ENABLE_BIT);
@@ -80,6 +93,13 @@ public class Sprite implements GShape
 		gl.glPushMatrix();
 		gl.glTranslatef(pVector2f[0], pVector2f[1], 0);
 		//TODO scale to world tile size
+		
+		if (facingLeft)
+		{
+			gl.glTranslatef(sVector2f[0], 0, 0);
+			gl.glRotatef(180.0f, 0, 1, 0);
+			gl.glFrontFace(GL_CW);
+		}
 
 
 		gl.glBegin(GL_TRIANGLE_STRIP);
@@ -101,5 +121,25 @@ public class Sprite implements GShape
 		gl.glPopMatrix();
 		gl.glPopAttrib();
 	}
+	
+	public World getWorldInstance() {
+		return worldInstance;
+	}
+
+
+	public void setWorldInstance(World worldInstance) {
+		this.worldInstance = worldInstance;
+	}
+
+
+	public int getCurrAnimation() {
+		return currAnimation;
+	}
+
+
+	public void setCurrAnimation(int currAnimation) {
+		this.currAnimation = currAnimation;
+	}
+
 
 }

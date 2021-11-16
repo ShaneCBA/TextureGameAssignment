@@ -10,18 +10,20 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 
 public enum Tile {
-	AIR(null, false),
-	SOLID("/world/dirt.png", true),
-	WATER("/world/water.png", true);
+	AIR(null, false, 0f),
+	SOLID("/world/dirt.png", true, 0.5f),
+	WATER("/world/water.png", true, 2f);
 	
 	private String textureFile;
 	private boolean drawable;
 	private Texture texture;
+	private float friction;
 	
-	Tile(String textureFile, boolean drawable)
+	Tile(String textureFile, boolean drawable, float friction)
 	{
 		this.textureFile = textureFile;
 		this.drawable = drawable;
+		this.setFriction(friction);
 		
 		if (drawable)
 			generateTexture();
@@ -73,5 +75,11 @@ public enum Tile {
 	Texture getTexture()
 	{
 		return texture;
+	}
+	public float getFriction() {
+		return friction;
+	}
+	public void setFriction(float friction) {
+		this.friction = friction;
 	}
 }

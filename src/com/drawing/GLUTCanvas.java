@@ -9,8 +9,14 @@ import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import com.github.shaneCBA.game.DebugUtil;
+import com.github.shaneCBA.game.FileLoadingUtil;
+import com.github.shaneCBA.game.Flipbook;
+import com.github.shaneCBA.game.Keyboard;
+import com.github.shaneCBA.game.Movable;
 import com.github.shaneCBA.game.Tile;
 import com.github.shaneCBA.game.World;
 import com.jogamp.opengl.GL2;
@@ -51,12 +57,17 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 	ArrayList<GShape> drawingArtObjects;
 	ArrayList<GCRect> collisionRects;
+	
+	Movable player;
+	
+	Keyboard keyboard;
 
 	/** Constructor to setup the GUI for this Component */
 	public GLUTCanvas(GLCapabilities capabilities, GKeyBoard kb, GMouse mouse) {
 
 		super(capabilities);
 
+		keyboard = Keyboard.getInstance();
 
 		// creating a canvas for drawing
 		// GLCanvas canvas = new GLCanvas(capabilities);
@@ -99,50 +110,40 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		// gl.glDepthFunc(GL2.GL_LESS);
 
 		mousePoints = new GDrawingPoints(GL_TRIANGLES);
+		ArrayList<Flipbook> books = new ArrayList<Flipbook>();
+		try {
+			String[] fileNames = {"/World/Dino/run/Run1.png", "/World/Dino/run/Run2.png", "/World/Dino/run/Run3.png",
+					"/World/Dino/run/Run4.png", "/World/Dino/run/Run5.png", "/World/Dino/run/Run6.png",
+					"/World/Dino/run/Run7.png", "/World/Dino/run/Run7.png"};
+			Flipbook book = new Flipbook(fileNames);
+			books.add(book);
+			fileNames = new String [] {"/World/Dino/idle/Idle1.png", "/World/Dino/idle/Idle2.png", "/World/Dino/idle/Idle3.png",
+					"/World/Dino/idle/Idle4.png", "/World/Dino/idle/Idle5.png", "/World/Dino/idle/Idle6.png",
+					"/World/Dino/idle/Idle7.png", "/World/Dino/idle/Idle7.png", "/World/Dino/idle/Idle8.png",
+					"/World/Dino/idle/Idle9.png", "/World/Dino/idle/Idle10.png"};
+			book = new Flipbook(fileNames);
+			books.add(book);
+			fileNames = new String [] {"/World/Dino/jump/Jump1.png", "/World/Dino/jump/Jump2.png", "/World/Dino/jump/Jump3.png",
+					"/World/Dino/jump/Jump4.png", "/World/Dino/jump/Jump5.png", "/World/Dino/jump/Jump6.png",
+					"/World/Dino/jump/Jump7.png", "/World/Dino/jump/Jump7.png", "/World/Dino/jump/Jump8.png",
+					"/World/Dino/jump/Jump9.png", "/World/Dino/jump/Jump10.png", "/World/Dino/jump/Jump11.png"};
+			book = new Flipbook(fileNames);
+			books.add(book);
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
+		Flipbook[] flipbooks = new Flipbook[books.size()];
+		flipbooks = books.toArray(flipbooks);
+		player = new Movable(new float[] {3*World.TILESIZE, 5*World.TILESIZE}, new float[] {2*World.TILESIZE,2*World.TILESIZE}, flipbooks);
+		
+		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
+		World world = new World(tileInts, tileInts[0].length, tileInts.length);
 
-		// origin
-//		myOrigin = new GDrawOrigin(GLUTCanvas.GL_Width, GLUTCanvas.GL_Height);
-
-		// learn quad initialization
-//		float vertex2f[] = new float[] { 105f, 0f, 100f, 100f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f };
-		// learnTriangle = new GTriangle(vertex2f);
-		// learnTriangle.loadTexture(gl, "/world/Texture.png");
-
-		// patch with texture
-//		myPatch = new GPatch(-275, -175, 550, 350, 5, "/world/world.png");
-
-
-//		GSprite runSprite = new GSprite(gl, -200, -100, 128, 75, 60);
-//		runSprite.selectAnimation(3);
-//
-//		GSprite walkSprite = new GSprite(gl, 25, 98, 128, 75, 60);
-//		walkSprite.selectAnimation(1);
-//
-//		// character controlled sprite animation
-//
-//		spriteCharacter = new GSpriteKey(gl, 0, -35, 100, 90, 85);
-//		spriteCharacter.selectAnimation(0);
-
-		// rectangle object
-//		vertex2f = new float[] { .3f, .3f, .3f, -273f, -120f, 140f, 135f };
-//		GCRect myLeftBoundary = new GCRect(vertex2f);
-//
-//		vertex2f = new float[] { .3f, .3f, .3f, -66f, -94f, 212f, 135f };
-//		GCRect myRightBoundary = new GCRect(vertex2f);
-
-//		Tile [][] tiles = {
-//				{Tile.AIR,Tile.AIR,Tile.AIR,Tile.AIR},
-//				{Tile.AIR,Tile.AIR,Tile.AIR,Tile.AIR},
-//				{Tile.AIR,Tile.SOLID,Tile.SOLID,Tile.AIR},
-//				{Tile.AIR,Tile.AIR,Tile.SOLID,Tile.SOLID}
-		Tile [][] tiles = {
-				{Tile.WATER,Tile.AIR,Tile.AIR,Tile.WATER},
-				{Tile.AIR,Tile.AIR,Tile.AIR,Tile.AIR},
-				{Tile.AIR,Tile.SOLID,Tile.SOLID,Tile.AIR},
-				{Tile.WATER,Tile.AIR,Tile.SOLID,Tile.SOLID}
-		};
-		World world = new World(tiles, 4, 4);
-
+		world.addEntity(player);
 		// adding them all in the arrayList
 		drawingArtObjects = new ArrayList<GShape>();
 		drawingArtObjects.add(world);
@@ -167,7 +168,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		height = (int) (height / dpiScalingFactorY);
 
 		if (DrawWindow.DEBUG_OUTPUT)
-		System.out.println(width + ":" + height);
+			System.out.println(width + ":" + height);
 
 		GLUTCanvas.CANVAS_HEIGHT = height;
 		GLUTCanvas.CANVAS_WIDTH = width;
@@ -222,10 +223,34 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 		gl.glLoadIdentity(); // reset the model-view matrix
 
+		if (keyboard.getKeyDown('A') && !keyboard.getKeyDown('D'))
+		{
+			player.setXVel(-5f);
+			player.setCurrAnimation(0);
+		}
+		else if (keyboard.getKeyDown('D') && !keyboard.getKeyDown('A'))
+		{
+			player.setXVel(5f);
+			player.setCurrAnimation(0);
+		}
+		else
+		{
+			player.setCurrAnimation(1);
+		}
+		if (keyboard.getKeyDown('W') && player.isGrounded())
+		{
+			player.setYVel(7f);
+		}
+		if (player.getvVector2()[1] != 0)
+		{
+			player.setCurrAnimation(2);
+		}
+		
 //		 myOrigin.render(gl);
 		for (GShape artObject : drawingArtObjects) {
 			artObject.render(gl);
 		}
+		DebugUtil.debugSquare(gl, 0, 0);
 
 		gl.glFlush();
 	}
@@ -243,27 +268,22 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	 */
 	public void processKeyBoardEvents(int key) {
 
-		if (keyBoard.getCharPressed() == 't' && keyBoard.isPressReleaseStatus() == true) {
-			this.mousePoints.setDrawingType(GL_TRIANGLES);
+		if (keyBoard.getCharPressed() == 'd' && keyBoard.isPressReleaseStatus() == true) {
+//			player.setXVel(5f);
 		}
 
-		else if (keyBoard.getCharPressed() == 'l' && keyBoard.isPressReleaseStatus() == true) {
-			this.mousePoints.setDrawingType(GL_LINES);
-
+		else if (keyBoard.getCharPressed() == 'a' && keyBoard.isPressReleaseStatus() == true) {
+//			player.setXVel(-5f);
 		}
 
 		else if (keyBoard.getCharPressed() == 'c' && keyBoard.isPressReleaseStatus() == true) {
 			this.mousePoints.setDrawingType(GDrawingPoints.XGL_CIRCLE);
 		}
 
-
-		this.spriteCharacter.processKeyBoardEvent(key);
-
 	}
 
 	public void processKeyBoardEventsStop() {
 		keyBoard.setPressReleaseStatus(false);
-		this.spriteCharacter.resetKeyBoardEvent();
 	}
 
 	/**
