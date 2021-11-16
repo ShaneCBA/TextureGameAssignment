@@ -23,6 +23,7 @@ public class Movable extends Sprite {
 		vVector2f = new float[] {0f,0f};
 	}
 	//Pass gl for debug purposes. Remove for final
+	//TODO Change to getFloorTile
 	private boolean checkGrounded(GL2 gl)
 	{
 		//TODO Modify to instead get the tile
@@ -31,9 +32,21 @@ public class Movable extends Sprite {
 		{
 			return false;
 		}
-		for (float x = pVector2f[0]; x <= pVector2f[0] + sVector2f[0]; x += World.TILESIZE)
+		for (float x = pVector2f[0]; x <= getRight(); x += World.TILESIZE)
 		{
-			if (worldInstance.detectTileCollision(x, pVector2f[1]) || worldInstance.detectTileCollision(x, pVector2f[1]-1))
+			if (worldInstance.detectTileCollision(x, pVector2f[1]-1))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	//TODO
+	public boolean checkCeiling()
+	{
+		for (float x = pVector2f[0]; x <= getRight(); x += World.TILESIZE)
+		{
+			if (worldInstance.detectTileCollision(x, getTop()))
 			{
 				return true;
 			}
@@ -75,12 +88,20 @@ public class Movable extends Sprite {
 		
 		if (grounded && !wasGrounded && vVector2f[1] < 0 && oldPVector2f[1] >= worldInstance.getTileTopY(pVector2f[1]-1))
 		{
+			//Set Y velocity to zero
 			vVector2f[1] = 0;
+			
+			//Move the sprite at a reverse angle to simulate collision
 			float topTile = worldInstance.getTileTopY(pVector2f[1]-1);
 			float offPercent = (topTile-pVector2f[1])/(oldPVector2f[1] - pVector2f[1]);
 			pVector2f[1] = topTile;
 			pVector2f[0] += (oldPVector2f[0] - pVector2f[0])*offPercent;
 		}
+//		if (checkCeiling() && vVector2f[1] > 0)
+//		{
+//			pVector2f[1] = worldInstance.getTileTopY(getTop())-2*World.TILESIZE;
+//			vVector2f[1] = 0;
+//		}
 	}
 	
 	public void setXVel(float x)
@@ -114,7 +135,7 @@ public class Movable extends Sprite {
 			DebugUtil.debugSquare(gl, debugVector[0], debugVector[1]);
 		}
 		DebugUtil.debugSquare(gl, pVector2f[0], pVector2f[1]);
-		DebugUtil.debugSquare(gl, pVector2f[0] + sVector2f[0], pVector2f[1]);
+		DebugUtil.debugSquare(gl, getRight(), pVector2f[1]);
 	}
 
 }
