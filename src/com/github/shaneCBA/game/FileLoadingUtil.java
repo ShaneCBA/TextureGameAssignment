@@ -17,7 +17,7 @@ public class FileLoadingUtil {
 			Scanner myReader = new Scanner(myObj);
 			String data;
 			int width=0, height=0;
-			int row = 0, col = 0;
+			int row = 0;
 			if (myReader.hasNextLine())
 			{
 				data = myReader.nextLine();

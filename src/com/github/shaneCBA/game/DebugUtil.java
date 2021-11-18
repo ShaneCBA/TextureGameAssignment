@@ -2,7 +2,6 @@ package com.github.shaneCBA.game;
 
 import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
 import static com.jogamp.opengl.GL.GL_LINE_LOOP;
-import static com.jogamp.opengl.GL.GL_TRIANGLE_STRIP;
 import static com.jogamp.opengl.GL2GL3.GL_LINE;
 
 import com.jogamp.opengl.GL2;
@@ -10,7 +9,7 @@ import com.jogamp.opengl.GL2;
 public class DebugUtil {
 	public static void debugSquare(GL2 gl, float x, float y)
 	{
-		gl.glPushAttrib(gl.GL_CURRENT_BIT);
+		gl.glPushAttrib(GL2.GL_CURRENT_BIT);
 		float [] vertex2f = {255f, 0f, 0f};
 		gl.glColor3fv(vertex2f, 0);
 		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

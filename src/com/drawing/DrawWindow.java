@@ -140,6 +140,7 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 
 	public void startGame() {
 		this.setSize(GLUTCanvas.WIDTH, GLUTCanvas.HEIGHT);
+		setResizable(false);
 		this.pack();
 		this.setVisible(true);
 		getAnimator().start(); // start the animation loop

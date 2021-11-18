@@ -1,46 +1,41 @@
 package com.github.shaneCBA.game;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.drawing.GShape;
 import com.drawing.GTextureUtil;
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 
 public enum Tile {
-	AIR(null, false, 0f),
-	SOLID("/world/dirt.png", true, 0.5f),
-	WATER("/world/water.png", true, 2f);
+	AIR(null, false, Tile.BREATHABLE),
+	DIRT("/world/dirt.png", true),
+	WATER("/world/water.png", true, -1),//-1 for none of the above (for now)
+	SIGN("/world/sign.png", true),
+	PLATFORM("/world/dirt.png", true, Tile.HALFBLOCK);
+	
+	static final int BREATHABLE = 0, SOLID = 1, HALFBLOCK = 2;
 	
 	private String textureFile;
-	private boolean drawable;
 	private Texture texture;
-	private float friction;
 	
-	Tile(String textureFile, boolean drawable, float friction)
+	private boolean drawable;
+	private int type;
+	
+	Tile(String textureFile, boolean drawable, int type)
 	{
 		this.textureFile = textureFile;
 		this.drawable = drawable;
-		this.setFriction(friction);
+		this.type = type;
 		
 		if (drawable)
 			generateTexture();
-//		if (textureFile != null)
-//		{
-//			//REGEX to match the filetype at the end of the file name
-//			String regexFileType = ".*\\.([a-zA-Z]+)$";
-//			Pattern p = Pattern.compile(regexFileType);
-//			Matcher m = p.matcher(textureFile);
-//			if (!m.find())
-//				throw new IllegalArgumentException(
-//						String.format("Tile - Could not find File Extension"
-//								+ "in string \"%s\"", textureFile));
-//			//Retrieve the file extension of the textureFile and format it to uppercase;
-//			String pattern = m.group();
-//			texture = GTextureUtil.loadTextureProjectDir(textureFile, pattern);
-//		}
+	}
+	
+	Tile(String textureFile, boolean drawable)
+	{
+		this(textureFile, drawable, SOLID);
 	}
 	void generateTexture()
 	{
@@ -63,6 +58,8 @@ public enum Tile {
 	{
 		if (drawable)
 		{
+			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
 			texture.enable(gl);
 			texture.bind(gl);
 		}
@@ -72,14 +69,14 @@ public enum Tile {
 		if (drawable)
 			texture.disable(gl);
 	}
+	
 	Texture getTexture()
 	{
 		return texture;
 	}
-	public float getFriction() {
-		return friction;
-	}
-	public void setFriction(float friction) {
-		this.friction = friction;
+	
+	int getType()
+	{
+		return type;
 	}
 }

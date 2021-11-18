@@ -81,11 +81,15 @@ public class World implements GShape {
 		{
 			for (int x = 0; x < width; x++)
 			{
+				gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
+				gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
 				drawTile(gl, x, y);
 			}
 		}
 		for (Sprite ent : entities)
 		{
+			gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+			gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
 			ent.render(gl);
 		}
 	}
@@ -144,16 +148,32 @@ public class World implements GShape {
 	{
 		int tileX = (int) (x/TILESIZE);
 		int tileY = (int) (y/TILESIZE);
-		if (tileX >= width || tileY >= height)
+		if (tileX >= width || tileX < 0 || tileY >= height || tileY < 0)
 		{
 			return true;
 		}
-		return this.tiles[tileY][tileX] == Tile.SOLID;
+		return this.tiles[tileY][tileX].getType() == Tile.SOLID;
 	}
 	
 	public float getTileTopY(float y)
 	{
 		int tileY = (int) (y/TILESIZE);
 		return (tileY + 1)*TILESIZE;
+	}
+	
+	public Tile getTile(float x, float y)
+	{
+		int tileY = (int) (y/TILESIZE);
+		int tileX = (int) (x/TILESIZE);
+		if (tileX >= width || tileX < 0 || tileY >= height || tileY < 0)
+		{
+			return Tile.AIR;
+		}
+		return this.tiles[tileY][tileX];
+	}
+	
+	public Tile getTile(float[] vect2f)
+	{
+		return getTile(vect2f[0], vect2f[1]);
 	}
 }

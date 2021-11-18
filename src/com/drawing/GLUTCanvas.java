@@ -246,7 +246,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 			player.setCurrAnimation(2);
 		}
 		
-//		 myOrigin.render(gl);
 		for (GShape artObject : drawingArtObjects) {
 			artObject.render(gl);
 		}

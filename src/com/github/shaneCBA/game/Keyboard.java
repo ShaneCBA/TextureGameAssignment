@@ -1,7 +1,6 @@
 package com.github.shaneCBA.game;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class Keyboard {
 	private static Keyboard instance;
