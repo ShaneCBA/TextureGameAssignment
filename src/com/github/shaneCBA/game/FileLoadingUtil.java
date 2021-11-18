@@ -28,10 +28,10 @@ public class FileLoadingUtil {
 			while (myReader.hasNextLine())
 			{
 				data = myReader.nextLine();
-				for (int i = 0; i < width*2 - 2; i+=2)
+				for (int i = 0; i < width; i+=1)
 				{
-					String n = data.substring(i, i+2);
-					world[height - row - 1][i/2] = Integer.parseInt(n, 16);
+					char n = data.charAt(i);
+					world[height - row - 1][i] = Character.getNumericValue(n);
 				}
 				row++;
 			}

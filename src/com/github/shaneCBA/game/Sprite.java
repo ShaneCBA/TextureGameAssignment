@@ -71,16 +71,15 @@ public class Sprite implements GShape
 	public Sprite(float[] position, float[] size, Flipbook animation)
 	{
 		this(position, size);
-		
-		this.animations[0] = animation;
+		this.animations = new Flipbook[]{animation};
 	}
 	
-	public float[] getpVector2f() {
+	public float[] getpositionVector2f() {
 		return positionVector2f;
 	}
 
 
-	public void setpVector2f(float[] pVector2f) {
+	public void setpositionVector2f(float[] pVector2f) {
 		this.positionVector2f = pVector2f;
 	}
 

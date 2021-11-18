@@ -241,6 +241,11 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		{
 			player.setYVel(7f);
 		}
+		if (keyboard.getKeyDown('S') && player.isGrounded())
+		{
+			float[] pos = player.getpositionVector2f();
+			pos[1]-=1;
+		}
 		if (player.getvVector2()[1] != 0)
 		{
 			player.setCurrAnimation(2);
