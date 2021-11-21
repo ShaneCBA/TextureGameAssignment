@@ -110,35 +110,9 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		// gl.glDepthFunc(GL2.GL_LESS);
 
 		mousePoints = new GDrawingPoints(GL_TRIANGLES);
-		ArrayList<Flipbook> books = new ArrayList<Flipbook>();
-		try {
-			String[] fileNames = {"/World/Dino/run/Run1.png", "/World/Dino/run/Run2.png", "/World/Dino/run/Run3.png",
-					"/World/Dino/run/Run4.png", "/World/Dino/run/Run5.png", "/World/Dino/run/Run6.png",
-					"/World/Dino/run/Run7.png", "/World/Dino/run/Run7.png"};
-			Flipbook book = new Flipbook(fileNames);
-			books.add(book);
-			fileNames = new String [] {"/World/Dino/idle/Idle1.png", "/World/Dino/idle/Idle2.png", "/World/Dino/idle/Idle3.png",
-					"/World/Dino/idle/Idle4.png", "/World/Dino/idle/Idle5.png", "/World/Dino/idle/Idle6.png",
-					"/World/Dino/idle/Idle7.png", "/World/Dino/idle/Idle7.png", "/World/Dino/idle/Idle8.png",
-					"/World/Dino/idle/Idle9.png", "/World/Dino/idle/Idle10.png"};
-			book = new Flipbook(fileNames);
-			books.add(book);
-			fileNames = new String [] {"/World/Dino/jump/Jump1.png", "/World/Dino/jump/Jump2.png", "/World/Dino/jump/Jump3.png",
-					"/World/Dino/jump/Jump4.png", "/World/Dino/jump/Jump5.png", "/World/Dino/jump/Jump6.png",
-					"/World/Dino/jump/Jump7.png", "/World/Dino/jump/Jump7.png", "/World/Dino/jump/Jump8.png",
-					"/World/Dino/jump/Jump9.png", "/World/Dino/jump/Jump10.png", "/World/Dino/jump/Jump11.png"};
-			book = new Flipbook(fileNames);
-			books.add(book);
-			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
-		Flipbook[] flipbooks = new Flipbook[books.size()];
-		flipbooks = books.toArray(flipbooks);
-		player = new Movable(new float[] {3*World.TILESIZE, 5*World.TILESIZE}, new float[] {1.5f*World.TILESIZE,1.5f*World.TILESIZE}, flipbooks);
+
+		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
+		player = new Movable(new float[] {3*World.TILESIZE, 5*World.TILESIZE}, new float[] {2*World.TILESIZE,2*World.TILESIZE}, flipbooks);
 		
 		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
 		World world = new World(tileInts, tileInts[0].length, tileInts.length);
