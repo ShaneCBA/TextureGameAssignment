@@ -56,16 +56,16 @@ public class Movable extends Sprite {
 		oldPositionVector2f = positionVector2f.clone();
 		wasGrounded = grounded;
 		
-		if (!wasGrounded)
+		if (!grounded)
 		{
 			velocityVector2f[1] = Math.max(velocityVector2f[1] - World.GRAVITY, TERMINAL_VEL);
 		}
-		if (wasGrounded)
+		if (grounded)
 		{
 			if (velocityVector2f[0] > 0)
-				velocityVector2f[0] = Math.max(velocityVector2f[0] - 1, 0);
+				velocityVector2f[0] = Math.max(velocityVector2f[0] - 0.5f, 0);
 			else if (velocityVector2f[0] < 0)
-				velocityVector2f[0] = Math.min(velocityVector2f[0] + 1, 0);
+				velocityVector2f[0] = Math.min(velocityVector2f[0] + 0.5f, 0);
 		}
 		if (velocityVector2f[0] > 0)
 		{
@@ -92,11 +92,11 @@ public class Movable extends Sprite {
 			positionVector2f[1] = topTile;
 			positionVector2f[0] += (oldPositionVector2f[0] - positionVector2f[0])*offPercent;
 		}
-//		if (checkCeiling() && vVector2f[1] > 0)
-//		{
-//			pVector2f[1] = worldInstance.getTileTopY(getTop())-2*World.TILESIZE;
-//			vVector2f[1] = 0;
-//		}
+		if (checkCeiling() && velocityVector2f[1] > 0)
+		{
+			positionVector2f[1] = worldInstance.getTileTopY(getTop())-2*World.TILESIZE;
+			velocityVector2f[1] = 0;
+		}
 	}
 	
 	public void setXVel(float x)

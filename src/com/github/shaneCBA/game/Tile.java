@@ -32,7 +32,7 @@ public enum Tile {
 		if (drawable)
 			generateTexture();
 	}
-	
+
 	Tile(String textureFile, boolean drawable)
 	{
 		this(textureFile, drawable, SOLID);
