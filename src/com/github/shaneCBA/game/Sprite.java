@@ -38,16 +38,17 @@ public class Sprite implements GShape
 	protected float[] sizeVector2f;
 	
 	//Hitbox
-	protected float[] hitboxVector[];
+	protected float[] hitboxVector2f;
 	
 	/**
 	 * @param position Position of sprite
 	 * @param size Dimensions of sprite
 	 */
-	private Sprite(float[] position, float[] size)
+	private Sprite(float[] position, float[] size, float[] hitboxVector2f)
 	{
 		this.positionVector2f = position;
 		this.sizeVector2f = size;
+		this.hitboxVector2f = hitboxVector2f;
 	}
 
 
@@ -56,9 +57,9 @@ public class Sprite implements GShape
 	 * @param size Dimensions of sprite
 	 * @param animations Flipbook array holding all the animations
 	 */
-	public Sprite(float[] position, float[] size, Flipbook[] animations)
+	public Sprite(float[] position, float[] size, float[] hitboxVector2f, Flipbook[] animations)
 	{
-		this(position, size);
+		this(position, size, hitboxVector2f);
 		
 		this.animations = animations;
 	}
@@ -68,9 +69,9 @@ public class Sprite implements GShape
 	 * @param size Dimensions of sprite
 	 * @param animation Individual Flipbook animation
 	 */
-	public Sprite(float[] position, float[] size, Flipbook animation)
+	public Sprite(float[] position, float[] size, float[] hitboxVector2f, Flipbook animation)
 	{
-		this(position, size);
+		this(position, size, hitboxVector2f);
 		this.animations = new Flipbook[]{animation};
 	}
 	
@@ -141,16 +142,6 @@ public class Sprite implements GShape
 
 	public int getCurrAnimation() {
 		return currAnimation;
-	}
-
-	public float getRight()
-	{
-		return positionVector2f[0] + sizeVector2f[0];
-	}
-
-	public float getTop()
-	{
-		return positionVector2f[1] + sizeVector2f[1];
 	}
 
 	public void setCurrAnimation(int currAnimation) {

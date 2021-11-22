@@ -14,8 +14,8 @@ public class Movable extends Sprite {
 	private boolean grounded;
 	private boolean wasGrounded;
 
-	public Movable(float[] position, float[] size, Flipbook[] animations) {
-		super(position, size, animations);
+	public Movable(float[] position, float[] size, float[] hitboxVector2f, Flipbook[] animations) {
+		super(position, size, hitboxVector2f, animations);
 		velocityVector2f = new float[] {0f,0f};
 	}
 	//Pass gl for debug purposes. Remove for final
