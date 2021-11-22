@@ -114,7 +114,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
 		player = new Movable(new float[] {3*World.TILESIZE, 5*World.TILESIZE},
 				new float[] {2*World.TILESIZE,2*World.TILESIZE},
-				new float[] {0f, 0f,1*World.TILESIZE,2*World.TILESIZE},
+				new float[] {10f, 0f,10f+1*World.TILESIZE,1.5f*World.TILESIZE},
 				flipbooks);
 		
 		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");

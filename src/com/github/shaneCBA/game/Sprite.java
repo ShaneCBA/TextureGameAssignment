@@ -144,6 +144,34 @@ public class Sprite implements GShape
 		return currAnimation;
 	}
 
+	public float getLeft()
+	{
+		return positionVector2f[0] + hitboxVector2f[0];
+	}
+	public float getRight()
+	{
+		return positionVector2f[0] + hitboxVector2f[2];
+	}
+
+	public float getBottom()
+	{
+		return positionVector2f[1] + hitboxVector2f[1];
+	}
+	public float getTop()
+	{
+		return positionVector2f[1] + hitboxVector2f[3];
+	}
+
+	public float getHeight()
+	{
+		return hitboxVector2f[3] - hitboxVector2f[1];
+	}
+
+	public float getWidth()
+	{
+		return hitboxVector2f[2] - hitboxVector2f[0];
+	}
+
 	public void setCurrAnimation(int currAnimation) {
 		this.currAnimation = currAnimation;
 	}

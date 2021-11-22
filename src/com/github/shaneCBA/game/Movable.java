@@ -5,6 +5,7 @@ import com.jogamp.opengl.GL2;
 public class Movable extends Sprite {
 	private final static float TERMINAL_VEL = -10;
 
+	private float[] debug;
 	//Prior position vector
 	private float[] oldPositionVector2f;
 
@@ -21,16 +22,16 @@ public class Movable extends Sprite {
 	//Pass gl for debug purposes. Remove for final
 	private boolean checkGrounded(GL2 gl)
 	{
-		//If velocity Y is poositive, or the previous position of the sprite isn't
+		//If velocity Y is positive, or the previous position of the sprite isn't
 		//above the tile, then there was no ground collision
-		if (velocityVector2f[1] > 0 || oldPositionVector2f[1] < worldInstance.getTileTopY(positionVector2f[1]))
+		if (velocityVector2f[1] > 0 || getOldBottom() < worldInstance.getTileTop(getBottom()))
 		{
 			return false;
 		}
 		//Check every half-tile below the sprite's hitbox
-		for (float x = positionVector2f[0]; x <= getRight(); x += World.TILESIZE/2)
+		for (float x = getLeft(); x <= getRight(); x += World.TILESIZE/2)
 		{
-			if (worldInstance.getTile(x, positionVector2f[1]-1).getType() == Tile.SOLID)
+			if (worldInstance.getTile(x, getBottom()-1).getType() == Tile.SOLID)
 			{
 				return true;
 			}
@@ -40,9 +41,47 @@ public class Movable extends Sprite {
 	
 	public boolean checkCeiling()
 	{
-		for (float x = positionVector2f[0]; x <= getRight(); x += World.TILESIZE/2)
+		//If velocity Y is negative, or the previous position of the sprite isn't
+		//below the tile, then there was no ceiling collision
+		if (velocityVector2f[1] < 0 || getOldTop() > worldInstance.getTileTop(getTop()) - World.TILESIZE)
+		{
+			return false;
+		}
+		for (float x = getLeft(); x <= getRight(); x += World.TILESIZE/2)
 		{
 			if (worldInstance.detectTileCollision(x, getTop()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkRight()
+	{
+		if (velocityVector2f[0] < 0 || getOldRight() > worldInstance.getTileRight(getRight()) - World.TILESIZE)
+		{
+			return false;
+		}
+		for (float y = getBottom(); y <= getTop(); y += World.TILESIZE/2)
+		{
+			if (worldInstance.detectTileCollision(getRight(), y))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkLeft()
+	{
+		if (velocityVector2f[0] > 0 || getOldLeft() < worldInstance.getTileLeft(getLeft()) - World.TILESIZE)
+		{
+			return false;
+		}
+		for (float y = getBottom(); y <= getTop(); y += World.TILESIZE/2)
+		{
+			if (worldInstance.detectTileCollision(getLeft(), y))
 			{
 				return true;
 			}
@@ -81,21 +120,33 @@ public class Movable extends Sprite {
 		
 		grounded = checkGrounded(gl);
 		
-		if (grounded && !wasGrounded && velocityVector2f[1] < 0 && oldPositionVector2f[1] >= worldInstance.getTileTopY(positionVector2f[1]-1))
+		if (grounded && !wasGrounded)
 		{
 			//Set Y velocity to zero
 			velocityVector2f[1] = 0;
 			
 			//Move the sprite at a reverse angle to simulate collision
-			float topTile = worldInstance.getTileTopY(positionVector2f[1]-1);
-			float offPercent = (topTile-positionVector2f[1])/(oldPositionVector2f[1] - positionVector2f[1]);
-			positionVector2f[1] = topTile;
-			positionVector2f[0] += (oldPositionVector2f[0] - positionVector2f[0])*offPercent;
+			float topTile = worldInstance.getTileTop(getBottom()-1);
+			float offPercent = (topTile-getBottom())/(getOldBottom() - getBottom());
+			positionVector2f[1] = topTile +  hitboxVector2f[1];
+			positionVector2f[0] += (getOldLeft() - getLeft())*offPercent;
 		}
-		if (checkCeiling() && velocityVector2f[1] > 0)
+		if (checkCeiling())
 		{
-			positionVector2f[1] = worldInstance.getTileTopY(getTop())-2*World.TILESIZE;
+			positionVector2f[1] = worldInstance.getTileBottom(getTop()) - getHeight() - hitboxVector2f[1]-1;
 			velocityVector2f[1] = 0;
+		}
+		if (checkRight())
+		{
+			System.out.println("RIGHT");
+			positionVector2f[0] = worldInstance.getTileLeft(getRight()) - getWidth() - hitboxVector2f[0]-1;
+			velocityVector2f[0] = 0;
+		}
+		else if (checkLeft())
+		{
+			System.out.println("LEFT");
+			positionVector2f[0] = worldInstance.getTileRight(getLeft()) - hitboxVector2f[0]+1;
+			velocityVector2f[0] = 0;
 		}
 	}
 	
@@ -119,14 +170,38 @@ public class Movable extends Sprite {
 	public float[] getvVector2() {
 		return velocityVector2f;
 	}
+	
+	public float getOldLeft()
+	{
+		return oldPositionVector2f[0] + hitboxVector2f[0];
+	}
+	public float getOldRight()
+	{
+		return oldPositionVector2f[0] + hitboxVector2f[2];
+	}
+
+	public float getOldBottom()
+	{
+		return oldPositionVector2f[1] + hitboxVector2f[1];
+	}
+	public float getOldTop()
+	{
+		return oldPositionVector2f[1] + hitboxVector2f[3];
+	}
 
 	@Override
 	public void render(GL2 gl)
 	{
 		update(gl);
 		super.render(gl);
-		DebugUtil.debugSquare(gl, positionVector2f[0], positionVector2f[1]);
-		DebugUtil.debugSquare(gl, getRight(), positionVector2f[1]);
+		if (debug != null)
+		{
+			DebugUtil.debugSquare(gl, debug[0], debug[1]);
+		}
+		DebugUtil.debugSquare(gl, getLeft(), getBottom());
+		DebugUtil.debugSquare(gl, getRight(), getBottom());
+		DebugUtil.debugSquare(gl, getLeft(), getTop());
+		DebugUtil.debugSquare(gl, getRight(), getTop());
 	}
 
 }

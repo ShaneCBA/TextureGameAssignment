@@ -154,11 +154,26 @@ public class World implements GShape {
 		}
 		return this.tiles[tileY][tileX].getType() == Tile.SOLID;
 	}
-	
-	public float getTileTopY(float y)
+
+	public float getTileBottom(float y)
 	{
 		int tileY = (int) (y/TILESIZE);
-		return (tileY + 1)*TILESIZE;
+		return (tileY)*TILESIZE;
+	}
+	public float getTileTop(float y)
+	{
+		return getTileBottom(y) + TILESIZE;
+	}
+	
+	public float getTileLeft(float x)
+	{
+		int tileX = (int) (x/TILESIZE);
+		return (tileX)*TILESIZE;
+	}
+	
+	public float getTileRight(float x)
+	{
+		return getTileLeft(x) + TILESIZE;
 	}
 	
 	public Tile getTile(float x, float y)
