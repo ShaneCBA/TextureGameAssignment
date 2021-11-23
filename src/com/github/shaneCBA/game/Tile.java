@@ -11,9 +11,9 @@ import com.jogamp.opengl.util.texture.Texture;
 public enum Tile {
 	AIR(null, false, Tile.BREATHABLE),
 	DIRT("/world/dirt.png", true),
+	PLATFORM("/world/dirt.png", true, Tile.HALFBLOCK),
 	WATER("/world/water.png", true, -1),//-1 for none of the above (for now)
-	SIGN("/world/sign.png", true),
-	PLATFORM("/world/dirt.png", true, Tile.HALFBLOCK);
+	SIGN("/world/sign.png", true, Tile.HALFBLOCK);
 	
 	static final int BREATHABLE = 0, SOLID = 1, HALFBLOCK = 2;
 	

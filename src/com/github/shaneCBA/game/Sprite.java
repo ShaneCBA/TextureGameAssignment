@@ -32,7 +32,7 @@ public class Sprite implements GShape
 	protected boolean facingLeft;
 
 	//Position vector
-	protected float[] positionVector2f;
+	protected float[] positionVector3f;
 
 	//Size vector
 	protected float[] sizeVector2f;
@@ -46,7 +46,7 @@ public class Sprite implements GShape
 	 */
 	private Sprite(float[] position, float[] size, float[] hitboxVector2f)
 	{
-		this.positionVector2f = position;
+		this.positionVector3f = position;
 		this.sizeVector2f = size;
 		this.hitboxVector2f = hitboxVector2f;
 	}
@@ -76,12 +76,12 @@ public class Sprite implements GShape
 	}
 	
 	public float[] getpositionVector2f() {
-		return positionVector2f;
+		return positionVector3f;
 	}
 
 
 	public void setpositionVector2f(float[] pVector2f) {
-		this.positionVector2f = pVector2f;
+		this.positionVector3f = pVector2f;
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class Sprite implements GShape
 		currentTexture.bind(gl);
 		
 		gl.glPushMatrix();
-		gl.glTranslatef(positionVector2f[0], positionVector2f[1], 0);
+		gl.glTranslatef(positionVector3f[0], positionVector3f[1], positionVector3f[2]);
 		//TODO scale to world tile size
 		
 		if (facingLeft)
@@ -146,20 +146,20 @@ public class Sprite implements GShape
 
 	public float getLeft()
 	{
-		return positionVector2f[0] + hitboxVector2f[0];
+		return positionVector3f[0] + hitboxVector2f[0];
 	}
 	public float getRight()
 	{
-		return positionVector2f[0] + hitboxVector2f[2];
+		return positionVector3f[0] + hitboxVector2f[2];
 	}
 
 	public float getBottom()
 	{
-		return positionVector2f[1] + hitboxVector2f[1];
+		return positionVector3f[1] + hitboxVector2f[1];
 	}
 	public float getTop()
 	{
-		return positionVector2f[1] + hitboxVector2f[3];
+		return positionVector3f[1] + hitboxVector2f[3];
 	}
 
 	public float getHeight()

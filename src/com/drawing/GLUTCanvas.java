@@ -112,9 +112,10 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		mousePoints = new GDrawingPoints(GL_TRIANGLES);
 
 		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
-		player = new Movable(new float[] {3*World.TILESIZE, 5*World.TILESIZE},
+		//Players z-axis is zero, as everything in the world should be placed relative to the player
+		player = new Movable(new float[] {1*World.TILESIZE, 2*World.TILESIZE, 0},
 				new float[] {2*World.TILESIZE,2*World.TILESIZE},
-				new float[] {10f, 0f,10f+1*World.TILESIZE,1.5f*World.TILESIZE},
+				new float[] {10f, 0f,9f+1*World.TILESIZE,1.5f*World.TILESIZE},
 				flipbooks);
 		
 		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
@@ -197,7 +198,8 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 		gl.glClearColor(.90f, .90f, 1.0f, 1.0f); // color used to clean the canvas
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the canvas with color
-
+		gl.glEnable(GL2.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL2.GL_LEQUAL);
 		gl.glLoadIdentity(); // reset the model-view matrix
 
 		if (keyboard.getKeyDown('A') && !keyboard.getKeyDown('D'))
