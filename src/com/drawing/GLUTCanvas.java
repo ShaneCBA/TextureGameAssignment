@@ -59,6 +59,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	ArrayList<GCRect> collisionRects;
 	
 	Movable player;
+	World world;
 	
 	Keyboard keyboard;
 
@@ -119,7 +120,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 				flipbooks);
 		
 		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
-		World world = new World(tileInts, tileInts[0].length, tileInts.length);
+		world = new World(tileInts, tileInts[0].length, tileInts.length);
 
 		world.addEntity(player);
 		// adding them all in the arrayList
@@ -222,8 +223,20 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		}
 		if (keyboard.getKeyDown('S') && player.isGrounded())
 		{
+			//move to player wrapper
+			boolean onHalfBlocks = true;
 			float[] pos = player.getpositionVector2f();
-			pos[1]-=1;
+			float y = player.getBottom()-1;
+
+			int gapcount = (int) Math.max(player.getWidth()/(World.TILESIZE/2), 2f);
+			float gap = player.getWidth()/gapcount;
+			//Check blocks below players feet to test if all of them are halfblocks
+			for (float x = player.getLeft(); onHalfBlocks && x <= player.getRight(); x += gap)
+			{
+				onHalfBlocks = world.getTile(x, y).getType() == Tile.HALFBLOCK;
+			}
+			if (onHalfBlocks)
+				pos[1]-=1;
 		}
 		if (player.getvVector2()[1] != 0)
 		{

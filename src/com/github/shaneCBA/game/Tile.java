@@ -11,11 +11,11 @@ import com.jogamp.opengl.util.texture.Texture;
 public enum Tile {
 	AIR(null, false, Tile.BREATHABLE),
 	DIRT("/world/dirt.png", true),
-	PLATFORM("/world/dirt.png", true, Tile.HALFBLOCK),
+	PLATFORM("/world/platform.png", true, Tile.HALFBLOCK),
 	WATER("/world/water.png", true, -1),//-1 for none of the above (for now)
 	SIGN("/world/sign.png", true, Tile.HALFBLOCK);
 	
-	static final int BREATHABLE = 0, SOLID = 1, HALFBLOCK = 2;
+	public static final int BREATHABLE = 0, SOLID = 1, HALFBLOCK = 2;
 	
 	private String textureFile;
 	private Texture texture;
@@ -75,7 +75,7 @@ public enum Tile {
 		return texture;
 	}
 	
-	int getType()
+	public int getType()
 	{
 		return type;
 	}

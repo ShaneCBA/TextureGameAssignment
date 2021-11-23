@@ -5,7 +5,6 @@ import com.jogamp.opengl.GL2;
 public class Movable extends Sprite {
 	private final static float TERMINAL_VEL = -10;
 
-	private float[] debug;
 	//Prior position vector
 	private float[] oldPositionVector2f;
 
@@ -19,8 +18,8 @@ public class Movable extends Sprite {
 		super(position, size, hitboxVector2f, animations);
 		velocityVector2f = new float[] {0f,0f};
 	}
-	//Pass gl for debug purposes. Remove for final
-	private boolean checkGrounded(GL2 gl)
+
+	private boolean checkGrounded()
 	{
 		//If velocity Y is positive, or the previous position of the sprite isn't
 		//above the tile, then there was no ground collision
@@ -28,8 +27,11 @@ public class Movable extends Sprite {
 		{
 			return false;
 		}
-		//Check every half-tile below the sprite's hitbox
-		for (float x = getLeft(); x <= getRight(); x += World.TILESIZE/2)
+		//Move to constructor or initialization
+		//Used to allow non-tile sized sprites
+		int gapcount = (int) Math.max(getWidth()/(World.TILESIZE/2), 2f);
+		float gap = getWidth()/gapcount;
+		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
 			int type = worldInstance.getTile(x, getBottom()-1).getType();
 			if (type == Tile.SOLID || type == Tile.HALFBLOCK)
@@ -48,7 +50,11 @@ public class Movable extends Sprite {
 		{
 			return false;
 		}
-		for (float x = getLeft(); x <= getRight(); x += World.TILESIZE/2)
+		//Move to constructor or initialization
+		//Used to allow non-tile sized sprites
+		int gapcount = (int) Math.max(getWidth()/(World.TILESIZE/2), 2f);
+		float gap = getWidth()/gapcount;
+		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
 			if (worldInstance.getTile(x, getTop()).getType() == Tile.SOLID)
 			{
@@ -64,7 +70,9 @@ public class Movable extends Sprite {
 		{
 			return false;
 		}
-		for (float y = getBottom(); y <= getTop(); y += World.TILESIZE/2)
+		int gapcount = (int) Math.max(getHeight()/(World.TILESIZE/2), 2f);
+		float gap = getHeight()/gapcount;
+		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
 			if (worldInstance.getTile(getRight(), y).getType() == Tile.SOLID)
 			{
@@ -80,7 +88,9 @@ public class Movable extends Sprite {
 		{
 			return false;
 		}
-		for (float y = getBottom(); y <= getTop(); y += World.TILESIZE/2)
+		int gapcount = (int) Math.max(getHeight()/(World.TILESIZE/2), 2f);
+		float gap = getHeight()/gapcount;
+		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
 			if (worldInstance.getTile(getLeft(), y).getType() == Tile.SOLID)
 			{
@@ -91,7 +101,7 @@ public class Movable extends Sprite {
 	}
 	
 	//GL passed for dbug purposes, remove for final
-	private void update(GL2 gl)
+	private void update()
 	{
 		oldPositionVector2f = positionVector3f.clone();
 		wasGrounded = grounded;
@@ -119,7 +129,7 @@ public class Movable extends Sprite {
 		positionVector3f[0] += velocityVector2f[0];
 		positionVector3f[1] += velocityVector2f[1];
 		
-		grounded = checkGrounded(gl);
+		grounded = checkGrounded();
 		
 		if (grounded && !wasGrounded)
 		{
@@ -191,12 +201,8 @@ public class Movable extends Sprite {
 	@Override
 	public void render(GL2 gl)
 	{
-		update(gl);
+		update();
 		super.render(gl);
-		if (debug != null)
-		{
-			DebugUtil.debugSquare(gl, debug[0], debug[1]);
-		}
 		DebugUtil.debugSquare(gl, getLeft(), getBottom());
 		DebugUtil.debugSquare(gl, getRight(), getBottom());
 		DebugUtil.debugSquare(gl, getLeft(), getTop());
