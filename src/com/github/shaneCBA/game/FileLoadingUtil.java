@@ -61,6 +61,10 @@ public class FileLoadingUtil {
 			File myObj = new File(texPath+fileName);
 			Scanner myReader = new Scanner(myObj);
 			String data = null;
+			int fileCount = 0;
+			ArrayList<String> fileNames;
+			String[] fileNamesString;
+			Flipbook book;
 			while (myReader.hasNextLine()) 
 			{
 				data = myReader.nextLine();
@@ -72,56 +76,65 @@ public class FileLoadingUtil {
 					//run animation
 					File runDir = new File(topDir.toString() + "/run");
 					File runDirFull = new File(topDirFull.toString() + "/run");
-				    int fileCount = runDirFull.list().length;
-				    ArrayList<String> fileNames = new ArrayList<String>();
-				    for (int i = 1; i <= fileCount; i++)
-				    {
-				    	File test = new File(runDirFull + "\\Run" + i + ".png");
-				    	if (test.exists())
-				    	{
-				    		fileNames.add(runDir + "\\Run" + i + ".png");
-				    	}
-				    }
-				    String[] fileNamesString = new String[fileNames.size()];
-				    fileNamesString = fileNames.toArray(fileNamesString);
-				    Flipbook book = new Flipbook(fileNamesString);
-					books.add(book);
+					if (runDirFull.exists())
+					{
+						fileCount = runDirFull.list().length;
+						fileNames = new ArrayList<String>();
+					    for (int i = 1; i <= fileCount; i++)
+					    {
+					    	File test = new File(runDirFull + "\\Run" + i + ".png");
+					    	if (test.exists())
+					    	{
+					    		fileNames.add(runDir + "\\Run" + i + ".png");
+					    	}
+					    }
+					    fileNamesString = new String[fileNames.size()];
+					    fileNamesString = fileNames.toArray(fileNamesString);
+					    book = new Flipbook(fileNamesString);
+						books.add(book);
+					}
 					
 					//idle animation
 					File idleDir = new File(topDir.toString() + "/idle");
 					File idleDirFull = new File(topDirFull.toString() + "/idle");
-					fileCount = idleDirFull.list().length;
-				    fileNames = new ArrayList<String>();
-				    for (int i = 1; i <= fileCount; i++)
-				    {
-				    	File test = new File(idleDirFull + "\\Idle" + i + ".png");
-				    	if (test.exists())
-				    	{
-				    		fileNames.add(idleDir + "\\Idle" + i + ".png");
-				    	}
-				    }
-				    fileNamesString = new String[fileNames.size()];
-				    fileNamesString = fileNames.toArray(fileNamesString);
-				    book = new Flipbook(fileNamesString);
-					books.add(book);
+					if (idleDirFull.exists())
+					{
+						fileCount = idleDirFull.list().length;
+					    fileNames = new ArrayList<String>();
+					    for (int i = 1; i <= fileCount; i++)
+					    {
+					    	File test = new File(idleDirFull + "\\Idle" + i + ".png");
+					    	if (test.exists())
+					    	{
+					    		fileNames.add(idleDir + "\\Idle" + i + ".png");
+					    	}
+					    }
+					    fileNamesString = new String[fileNames.size()];
+					    fileNamesString = fileNames.toArray(fileNamesString);
+					    book = new Flipbook(fileNamesString);
+						books.add(book);
+					}
 				
 					//jump animation
 					File jumpDir = new File(topDir.toString() + "/jump");
 					File jumpDirFull = new File(topDirFull.toString() + "/jump");
-					fileCount = jumpDirFull.list().length;
-				    fileNames = new ArrayList<String>();
-				    for (int i = 1; i <= fileCount; i++)
-				    {
-				    	File test = new File(jumpDirFull + "\\Jump" + i + ".png");
-				    	if (test.exists())
-				    	{
-				    		fileNames.add(jumpDir + "\\Jump" + i + ".png");
-				    	}
-				    }
-				    fileNamesString = new String[fileNames.size()];
-				    fileNamesString = fileNames.toArray(fileNamesString);
-				    book = new Flipbook(fileNamesString);
-					books.add(book);
+					if (jumpDirFull.exists())
+					{
+						fileCount = jumpDirFull.list().length;
+					    fileNames = new ArrayList<String>();
+					    for (int i = 1; i <= fileCount; i++)
+					    {
+					    	File test = new File(jumpDirFull + "\\Jump" + i + ".png");
+					    	if (test.exists())
+					    	{
+					    		fileNames.add(jumpDir + "\\Jump" + i + ".png");
+					    	}
+					    }
+					    fileNamesString = new String[fileNames.size()];
+					    fileNamesString = fileNames.toArray(fileNamesString);
+					    book = new Flipbook(fileNamesString);
+						books.add(book);
+					}
 				}
 			}
 			myReader.close();
