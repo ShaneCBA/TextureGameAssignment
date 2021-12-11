@@ -112,7 +112,7 @@ public class World implements GShape {
 			
 			gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			
-			gl.glTranslatef((float) x * TILESIZE, (float) y * TILESIZE, 0);
+			gl.glTranslatef((float) x * TILESIZE, (float) y * TILESIZE, -1);
 			
 			
 			gl.glEnable(GL2.GL_TEXTURE_2D);

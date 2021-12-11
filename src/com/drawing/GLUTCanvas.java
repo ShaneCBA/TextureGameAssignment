@@ -2,14 +2,12 @@ package com.drawing;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_LINES;
 import static com.jogamp.opengl.GL.GL_TRIANGLES;
 import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
 import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.github.shaneCBA.game.DebugUtil;
@@ -97,8 +95,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		GL_Height = DRAWING_HEIGHT / 2.0f;
 		gl.glMatrixMode(GL_PROJECTION); // choose projection matrix
 		gl.glLoadIdentity(); // reset projection matrix
-		// gl.glOrtho(-GL_Width, GL_Width, -GL_Height, GL_Height, -2.0f, 2.0f); // 2D
-//		glu.gluOrtho2D(-GL_Width, GL_Width, -GL_Height, GL_Height); // canvas
+		
 		glu.gluOrtho2D(0, 2*GL_Width, 0, 2*GL_Height); // canvas
 
 		// Enable the model-view transform

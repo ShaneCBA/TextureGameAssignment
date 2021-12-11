@@ -105,21 +105,40 @@ public class Sprite implements GShape
 		if (facingLeft)
 		{
 			gl.glTranslatef(sizeVector2f[0], 0, 0);
-			gl.glRotatef(180.0f, 0, 1, 0);
-			gl.glFrontFace(GL_CW);
+//			gl.glRotatef(180.0f, 0, 1, 0);
+//			gl.glFrontFace(GL_CW);
 		}
 
 
 		gl.glBegin(GL_TRIANGLE_STRIP);
 
-		gl.glTexCoord2f(1, 0);
-		gl.glVertex2f(sizeVector2f[0], 0f); // v0 bottom right
-		gl.glTexCoord2f(1, 1);
-		gl.glVertex2f(sizeVector2f[0], sizeVector2f[1]); // v1 top right
-		gl.glTexCoord2f(0, 0);
-		gl.glVertex2f(0f, 0f); // v2 bottom left
-		gl.glTexCoord2f(0, 1);
-		gl.glVertex2f(0f, sizeVector2f[1]); // v3 top left
+		
+
+		if (facingLeft)
+		{
+			//fix
+			float nX = sizeVector2f[0] - hitboxVector2f[2] +  hitboxVector2f[0] + getWidth();// + getWidth();
+//			gl.glTranslatef(-nX, 0, 0);
+			gl.glTexCoord2f(0, 0);
+			gl.glVertex2f(sizeVector2f[0]-nX, 0f); // v0 bottom right
+			gl.glTexCoord2f(0, 1);
+			gl.glVertex2f(sizeVector2f[0]-nX, sizeVector2f[1]); // v1 top right
+			gl.glTexCoord2f(1, 0);
+			gl.glVertex2f(-nX, 0f); // v2 bottom left
+			gl.glTexCoord2f(1, 1);
+			gl.glVertex2f(-nX, sizeVector2f[1]); // v3 top left
+		}
+		else
+		{
+			gl.glTexCoord2f(1, 0);
+			gl.glVertex2f(sizeVector2f[0], 0f); // v0 bottom right
+			gl.glTexCoord2f(1, 1);
+			gl.glVertex2f(sizeVector2f[0], sizeVector2f[1]); // v1 top right
+			gl.glTexCoord2f(0, 0);
+			gl.glVertex2f(0f, 0f); // v2 bottom left
+			gl.glTexCoord2f(0, 1);
+			gl.glVertex2f(0f, sizeVector2f[1]); // v3 top left
+		}
 
 		gl.glEnd();
 		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
