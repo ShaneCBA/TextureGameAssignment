@@ -15,6 +15,7 @@ import com.github.shaneCBA.game.FileLoadingUtil;
 import com.github.shaneCBA.game.Flipbook;
 import com.github.shaneCBA.game.Keyboard;
 import com.github.shaneCBA.game.Movable;
+import com.github.shaneCBA.game.PlayerController;
 import com.github.shaneCBA.game.Tile;
 import com.github.shaneCBA.game.World;
 import com.jogamp.opengl.GL2;
@@ -58,8 +59,8 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	
 	Movable player;
 	World world;
-	
 	Keyboard keyboard;
+	PlayerController playerController;
 
 	/** Constructor to setup the GUI for this Component */
 	public GLUTCanvas(GLCapabilities capabilities, GKeyBoard kb, GMouse mouse) {
@@ -118,8 +119,11 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		
 		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
 		world = new World(tileInts, tileInts[0].length, tileInts.length);
-
+		
 		world.addEntity(player);
+		
+		PlayerController playerController = new PlayerController(player, world);
+		
 		// adding them all in the arrayList
 		drawingArtObjects = new ArrayList<GShape>();
 		drawingArtObjects.add(world);
@@ -199,46 +203,8 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL2.GL_LEQUAL);
 		gl.glLoadIdentity(); // reset the model-view matrix
-
-		if (keyboard.getKeyDown('A') && !keyboard.getKeyDown('D'))
-		{
-			player.setXVel(-5f);
-			player.setCurrAnimation(0);
-		}
-		else if (keyboard.getKeyDown('D') && !keyboard.getKeyDown('A'))
-		{
-			player.setXVel(5f);
-			player.setCurrAnimation(0);
-		}
-		else
-		{
-			player.setCurrAnimation(1);
-		}
-		if (keyboard.getKeyDown('W') && player.isGrounded())
-		{
-			player.setYVel(7f);
-		}
-		if (keyboard.getKeyDown('S') && player.isGrounded())
-		{
-			//move to player wrapper
-			boolean onHalfBlocks = true;
-			float[] pos = player.getpositionVector2f();
-			float y = player.getBottom()-1;
-
-			int gapcount = (int) Math.max(player.getWidth()/(World.TILESIZE/2), 2f);
-			float gap = player.getWidth()/gapcount;
-			//Check blocks below players feet to test if all of them are halfblocks
-			for (float x = player.getLeft(); onHalfBlocks && x <= player.getRight(); x += gap)
-			{
-				onHalfBlocks = world.getTile(x, y).getType() == Tile.HALFBLOCK;
-			}
-			if (onHalfBlocks)
-				pos[1]-=1;
-		}
-		if (player.getvVector2()[1] != 0)
-		{
-			player.setCurrAnimation(2);
-		}
+		
+		playerController.updateMovement();
 		
 		for (GShape artObject : drawingArtObjects) {
 			artObject.render(gl);
