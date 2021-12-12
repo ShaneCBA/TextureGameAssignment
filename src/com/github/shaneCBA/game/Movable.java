@@ -29,7 +29,7 @@ public class Movable extends Sprite {
 		}
 		//Move to constructor or initialization
 		//Used to allow non-tile sized sprites
-		int gapcount = (int) Math.max(getWidth()/(World.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getWidth()/(Level.TILESIZE/2), 2f);
 		float gap = getWidth()/gapcount;
 		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
@@ -46,13 +46,13 @@ public class Movable extends Sprite {
 	{
 		//If velocity Y is negative, or the previous position of the sprite isn't
 		//below the tile, then there was no ceiling collision
-		if (velocityVector2f[1] < 0 || getOldTop() > worldInstance.getTileTop(getTop()) - World.TILESIZE)
+		if (velocityVector2f[1] < 0 || getOldTop() > worldInstance.getTileTop(getTop()) - Level.TILESIZE)
 		{
 			return false;
 		}
 		//Move to constructor or initialization
 		//Used to allow non-tile sized sprites
-		int gapcount = (int) Math.max(getWidth()/(World.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getWidth()/(Level.TILESIZE/2), 2f);
 		float gap = getWidth()/gapcount;
 		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
@@ -66,11 +66,11 @@ public class Movable extends Sprite {
 	
 	public boolean checkRight()
 	{
-		if (velocityVector2f[0] < 0 || getOldRight() > worldInstance.getTileRight(getRight()) - World.TILESIZE)
+		if (velocityVector2f[0] < 0 || getOldRight() > worldInstance.getTileRight(getRight()) - Level.TILESIZE)
 		{
 			return false;
 		}
-		int gapcount = (int) Math.max(getHeight()/(World.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getHeight()/(Level.TILESIZE/2), 2f);
 		float gap = getHeight()/gapcount;
 		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
@@ -84,11 +84,11 @@ public class Movable extends Sprite {
 	
 	public boolean checkLeft()
 	{
-		if (velocityVector2f[0] > 0 || getOldLeft() < worldInstance.getTileLeft(getLeft()) - World.TILESIZE)
+		if (velocityVector2f[0] > 0 || getOldLeft() < worldInstance.getTileLeft(getLeft()) - Level.TILESIZE)
 		{
 			return false;
 		}
-		int gapcount = (int) Math.max(getHeight()/(World.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getHeight()/(Level.TILESIZE/2), 2f);
 		float gap = getHeight()/gapcount;
 		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
@@ -108,7 +108,7 @@ public class Movable extends Sprite {
 		
 		if (!grounded)
 		{
-			velocityVector2f[1] = Math.max(velocityVector2f[1] - World.GRAVITY, TERMINAL_VEL);
+			velocityVector2f[1] = Math.max(velocityVector2f[1] - Level.GRAVITY, TERMINAL_VEL);
 		}
 		if (grounded)
 		{
@@ -139,7 +139,7 @@ public class Movable extends Sprite {
 			//Move the sprite at a reverse angle to simulate collision
 			float topTile = worldInstance.getTileTop(getBottom()-1);
 			float offPercent = (topTile-getBottom())/(getOldBottom() - getBottom());
-			positionVector3f[1] = topTile +  hitboxVector2f[1];
+			positionVector3f[1] = topTile - hitboxVector2f[1];
 			positionVector3f[0] += (getOldLeft() - getLeft())*offPercent;
 		}
 		if (checkCeiling())

@@ -1,6 +1,5 @@
 package com.github.shaneCBA.game;
 
-import static com.jogamp.opengl.GL.GL_CW;
 import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
 import static com.jogamp.opengl.GL.GL_TRIANGLE_STRIP;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
@@ -26,7 +25,7 @@ public class Sprite implements GShape
 	
 	//Allows access to the world instance for use in calcuation and condition
 	//testing
-	protected World worldInstance;
+	protected Level worldInstance;
 	
 	//Used to change the way a sprite is facing
 	protected boolean facingLeft;
@@ -149,12 +148,12 @@ public class Sprite implements GShape
 		gl.glPopAttrib();
 	}
 	
-	public World getWorldInstance() {
+	public Level getWorldInstance() {
 		return worldInstance;
 	}
 
 
-	public void setWorldInstance(World worldInstance) {
+	public void setWorldInstance(Level worldInstance) {
 		this.worldInstance = worldInstance;
 	}
 

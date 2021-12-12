@@ -16,8 +16,7 @@ import com.github.shaneCBA.game.Flipbook;
 import com.github.shaneCBA.game.Keyboard;
 import com.github.shaneCBA.game.Movable;
 import com.github.shaneCBA.game.PlayerController;
-import com.github.shaneCBA.game.Tile;
-import com.github.shaneCBA.game.World;
+import com.github.shaneCBA.game.Level;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -58,7 +57,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	ArrayList<GCRect> collisionRects;
 	
 	Movable player;
-	World world;
+	Level world;
 	Keyboard keyboard;
 	PlayerController playerController;
 
@@ -112,17 +111,17 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
 		//Players z-axis is zero, as everything in the world should be placed relative to the player
-		player = new Movable(new float[] {1*World.TILESIZE, 2*World.TILESIZE, 0},
-				new float[] {2*World.TILESIZE,2*World.TILESIZE},
-				new float[] {10f, 0f,9f+1*World.TILESIZE,1.5f*World.TILESIZE},
+		player = new Movable(new float[] {1*Level.TILESIZE, 2*Level.TILESIZE, 0},
+				new float[] {2*Level.TILESIZE,2*Level.TILESIZE},
+				new float[] {10f, 3f,9f+1*Level.TILESIZE,1.5f*Level.TILESIZE},
 				flipbooks);
 		
 		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
-		world = new World(tileInts, tileInts[0].length, tileInts.length);
+		world = new Level(tileInts, tileInts[0].length, tileInts.length);
 		
 		world.addEntity(player);
 		
-		PlayerController playerController = new PlayerController(player, world);
+		playerController = new PlayerController(player, world);
 		
 		// adding them all in the arrayList
 		drawingArtObjects = new ArrayList<GShape>();
