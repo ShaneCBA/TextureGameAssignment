@@ -80,8 +80,9 @@ public enum Tile {
 		return texture;
 	}
 	
-	public int getType()
+	int getType()
 	{
 		return type;
 	}
+	
 }

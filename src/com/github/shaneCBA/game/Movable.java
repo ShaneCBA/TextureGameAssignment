@@ -56,7 +56,7 @@ public class Movable extends Sprite {
 		float gap = getWidth()/gapcount;
 		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
-			int tileId = worldInstance.getTile(x, getBottom()-1).ordinal();
+			int tileId = levelInstance.getTile(x, getBottom()-1).ordinal();
 			if (!touched[tileId])
 				touched[tileId] = true;
 			
@@ -77,7 +77,7 @@ public class Movable extends Sprite {
 	{
 		//If velocity Y is positive, or the previous position of the sprite isn't
 		//above the tile, then there was no ground collision
-		if (velocityVector2f[1] > 0 || getOldBottom() < worldInstance.getTileTop(getBottom()))
+		if (velocityVector2f[1] > 0 || getOldBottom() < TileUtil.getTileTop(getBottom()))
 		{
 			return false;
 		}
@@ -87,7 +87,7 @@ public class Movable extends Sprite {
 		float gap = getWidth()/gapcount;
 		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
-			int type = worldInstance.getTile(x, getBottom()-1).getType();
+			int type = levelInstance.getTile(x, getBottom()-1).getType();
 			if (type == Tile.SOLID || type == Tile.HALFBLOCK)
 			{
 				return true;
@@ -100,7 +100,7 @@ public class Movable extends Sprite {
 	{
 		//If velocity Y is negative, or the previous position of the sprite isn't
 		//below the tile, then there was no ceiling collision
-		if (velocityVector2f[1] < 0 || getOldTop() > worldInstance.getTileTop(getTop()) - Tile.TILESIZE)
+		if (velocityVector2f[1] < 0 || getOldTop() > TileUtil.getTileTop(getTop()) - Tile.TILESIZE)
 		{
 			return false;
 		}
@@ -110,7 +110,7 @@ public class Movable extends Sprite {
 		float gap = getWidth()/gapcount;
 		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
-			if (worldInstance.getTile(x, getTop()).getType() == Tile.SOLID)
+			if (levelInstance.getTile(x, getTop()).getType() == Tile.SOLID)
 			{
 				return true;
 			}
@@ -120,7 +120,7 @@ public class Movable extends Sprite {
 	
 	public boolean checkRight()
 	{
-		if (velocityVector2f[0] < 0 || getOldRight() > worldInstance.getTileRight(getRight()) - Tile.TILESIZE)
+		if (velocityVector2f[0] < 0 || getOldRight() > TileUtil.getTileRight(getRight()) - Tile.TILESIZE)
 		{
 			return false;
 		}
@@ -128,7 +128,7 @@ public class Movable extends Sprite {
 		float gap = getHeight()/gapcount;
 		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
-			if (worldInstance.getTile(getRight(), y).getType() == Tile.SOLID)
+			if (levelInstance.getTile(getRight(), y).getType() == Tile.SOLID)
 			{
 				return true;
 			}
@@ -138,7 +138,7 @@ public class Movable extends Sprite {
 	
 	public boolean checkLeft()
 	{
-		if (velocityVector2f[0] > 0 || getOldLeft() < worldInstance.getTileLeft(getLeft()) - Tile.TILESIZE)
+		if (velocityVector2f[0] > 0 || getOldLeft() < TileUtil.getTileLeft(getLeft()) - Tile.TILESIZE)
 		{
 			return false;
 		}
@@ -146,7 +146,7 @@ public class Movable extends Sprite {
 		float gap = getHeight()/gapcount;
 		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
-			if (worldInstance.getTile(getLeft(), y).getType() == Tile.SOLID)
+			if (levelInstance.getTile(getLeft(), y).getType() == Tile.SOLID)
 			{
 				return true;
 			}
@@ -190,24 +190,24 @@ public class Movable extends Sprite {
 			velocityVector2f[1] = 0;
 			
 			//Move the sprite at a reverse angle to simulate collision
-			float topTile = worldInstance.getTileTop(getBottom()-1);
+			float topTile = TileUtil.getTileTop(getBottom()-1);
 			float offPercent = (topTile-getBottom())/(getOldBottom() - getBottom());
 			positionVector3f[1] = topTile - hitboxVector2f[1];
 			positionVector3f[0] += (getOldLeft() - getLeft())*offPercent;
 		}
 		if (checkCeiling())
 		{
-			positionVector3f[1] = worldInstance.getTileBottom(getTop()) - getHeight() - hitboxVector2f[1]-1;
+			positionVector3f[1] = TileUtil.getTileBottom(getTop()) - getHeight() - hitboxVector2f[1]-1;
 			velocityVector2f[1] = 0;
 		}
 		if (checkRight())
 		{
-			positionVector3f[0] = worldInstance.getTileLeft(getRight()) - getWidth() - hitboxVector2f[0]-1;
+			positionVector3f[0] = TileUtil.getTileLeft(getRight()) - getWidth() - hitboxVector2f[0]-1;
 			velocityVector2f[0] = 0;
 		}
 		else if (checkLeft())
 		{
-			positionVector3f[0] = worldInstance.getTileRight(getLeft()) - hitboxVector2f[0]+1;
+			positionVector3f[0] = TileUtil.getTileRight(getLeft()) - hitboxVector2f[0]+1;
 			velocityVector2f[0] = 0;
 		}
 	}

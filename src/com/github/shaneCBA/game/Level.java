@@ -118,27 +118,6 @@ public class Level implements GShape {
 		}
 		return this.tiles[tileY][tileX].getType() == Tile.SOLID;
 	}
-
-	public float getTileBottom(float y)
-	{
-		int tileY = (int) (y/Tile.TILESIZE);
-		return (float) tileY*Tile.TILESIZE;
-	}
-	public float getTileTop(float y)
-	{
-		return getTileBottom(y) + Tile.TILESIZE;
-	}
-	
-	public float getTileLeft(float x)
-	{
-		int tileX = (int) (x/Tile.TILESIZE);
-		return (float) tileX*Tile.TILESIZE;
-	}
-	
-	public float getTileRight(float x)
-	{
-		return getTileLeft(x) + Tile.TILESIZE;
-	}
 	
 	public Tile getTile(float x, float y)
 	{

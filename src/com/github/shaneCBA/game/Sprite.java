@@ -25,7 +25,7 @@ public class Sprite implements GShape
 	
 	//Allows access to the world instance for use in calcuation and condition
 	//testing
-	protected Level worldInstance;
+	protected Level levelInstance;
 	
 	//Used to change the way a sprite is facing
 	protected boolean facingLeft;
@@ -89,12 +89,12 @@ public class Sprite implements GShape
 	}
 	
 	public Level getWorldInstance() {
-		return worldInstance;
+		return levelInstance;
 	}
 
 
 	public void setWorldInstance(Level worldInstance) {
-		this.worldInstance = worldInstance;
+		this.levelInstance = worldInstance;
 	}
 
 
