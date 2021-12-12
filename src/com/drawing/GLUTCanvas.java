@@ -41,19 +41,8 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	public static final float DRAWING_WIDTH = 550f, DRAWING_HEIGHT = 350f;
 	public static float GL_Width, GL_Height;
 	// Setup OpenGL Graphics Renderer
-//	GDrawOrigin myOrigin;
-	GKeyBoard keyBoard;
-	GMouse mouse;
-
-	GQuad myQuad;
-
-	// GTriangle learnTriangle;
-
-	GPatch myPatch;
-	GSpriteKey spriteCharacter;
 
 	ArrayList<GShape> drawingArtObjects;
-	ArrayList<GCRect> collisionRects;
 	
 	Movable player;
 	World world;
@@ -71,8 +60,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 		this.addGLEventListener(this);
 		this.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
-		this.keyBoard = kb;
-		this.mouse = mouse;
 	}
 
 	// ------ Implement methods declared in GLEventListener ------
@@ -102,8 +89,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 		gl.glClearColor(.90f, .90f, 1.0f, 1.0f); // color used to clean the canvas
 		gl.glColor3f(1.0f, 1.0f, 1.0f); // drawing color
-		// gl.glEnable(GL2.GL_DEPTH_TEST);
-		// gl.glDepthFunc(GL2.GL_LESS);
 
 		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
 		//Players z-axis is zero, as everything in the world should be placed relative to the player
@@ -112,20 +97,13 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 				new float[] {10f, 3f,9f+1*Tile.TILESIZE,1.5f*Tile.TILESIZE},
 				flipbooks);
 		
-		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
 		
-		Level level1 = new Level(tileInts, tileInts[0].length, tileInts.length,1f*Tile.TILESIZE, 2f*Tile.TILESIZE);
-		
-		tileInts= FileLoadingUtil.readOldWorld("/World/demo2.wd");
-		Level level2 = new Level(tileInts, tileInts[0].length, tileInts.length,1*Tile.TILESIZE, 2*Tile.TILESIZE);
-		
-		level1.addEntity(player);
+		ArrayList<Level> levels = FileLoadingUtil.readWorld();
+		levels.get(0).addEntity(player);
 
-//		playerController = new PlayerController(player, level1);//move to
 		
 		world = World.getInstance();
-		world.loadLevel(level1);
-		world.loadLevel(level2);
+		world.loadLevels(levels);
 		world.setPlayer(player); 
 		
 		// adding them all in the arrayList
@@ -178,15 +156,8 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		GLU glu = new GLU();
 		gl.glMatrixMode(GL_PROJECTION); // choose projection matrix
 		gl.glLoadIdentity(); // reset projection matrix
-		// gl.glOrtho(-GL_Width, GL_Width, -GL_Height, GL_Height, -2.0f, 2.0f); // 2D
-//		glu.gluOrtho2D(-GL_Width, GL_Width, -GL_Height, GL_Height); // canvas
 		glu.gluOrtho2D(0, 2*GL_Width, 0, 2*GL_Height); // canvas
 
-//		 gl.glViewport(0, 0, (int) GL_Width * 2, -(int) GL_Height * 2);
-//		gl.glViewport(-(int) GL_Width, (int) GL_Width, -(int) GL_Height, (int) GL_Height);
-
-		// gl.glEnable(GL2.GL_DEPTH_TEST);
-		// gl.glDepthFunc(GL2.GL_LESS);
 		// Enable the model-view transform
 		gl.glMatrixMode(GL_MODELVIEW); // specify coordinates
 		gl.glLoadIdentity(); // reset

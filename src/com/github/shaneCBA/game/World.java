@@ -44,7 +44,10 @@ public class World implements GShape {
 	
 	public void loadLevels(List<Level> levels)
 	{
-		this.levels = levels;
+		for (Level level : levels)
+		{
+			loadLevel(level);
+		}
 	}
 	
 	public void setPlayer(Movable player)
