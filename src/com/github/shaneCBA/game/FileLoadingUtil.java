@@ -6,18 +6,20 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileLoadingUtil {
+	private FileLoadingUtil()
+	{
+	}
 	
-	//.wd
 	public static int [][] readOldWorld(String filename)
 	{
 		String texPath = System.getProperty("user.dir");
-		int[][] world = null; 
-	    try
+		int[][] world = null;
+		File myObj = new File(texPath+filename);
+	    try (Scanner myReader=new Scanner(myObj))
 	    {
-			File myObj = new File(texPath+filename);
-			Scanner myReader = new Scanner(myObj);
 			String data;
-			int width=0, height=0;
+			int width=0;
+			int height=0;
 			int row = 0;
 			if (myReader.hasNextLine())
 			{
@@ -36,30 +38,26 @@ public class FileLoadingUtil {
 				}
 				row++;
 			}
-			myReader.close();
 		}
 	    catch (FileNotFoundException e)
 	    {
-			System.out.println("An error occurred while reading the world file.");
+			System.err.println("An error occurred while reading the world file.");
 			e.printStackTrace();
 		}
 	    catch (Exception e)
 	    {
-	    	System.out.println("BRUH");
 	    	e.printStackTrace();
 	    }
 		return world;
 	}
-	
-	//.data
+
 	public static Flipbook[] readSprite(String fileName, String spriteName)
 	{
 		String texPath = System.getProperty("user.dir");
-		ArrayList<Flipbook> books = new ArrayList<Flipbook>();
-	    try
+		ArrayList<Flipbook> books = new ArrayList<>();
+		File myObj = new File(texPath+fileName);
+	    try (Scanner myReader = new Scanner(myObj))
 	    {
-			File myObj = new File(texPath+fileName);
-			Scanner myReader = new Scanner(myObj);
 			String data = null;
 			int fileCount = 0;
 			ArrayList<String> fileNames;
@@ -79,7 +77,7 @@ public class FileLoadingUtil {
 					if (runDirFull.exists())
 					{
 						fileCount = runDirFull.list().length;
-						fileNames = new ArrayList<String>();
+						fileNames = new ArrayList<>();
 					    for (int i = 1; i <= fileCount; i++)
 					    {
 					    	File test = new File(runDirFull + "\\Run" + i + ".png");
@@ -100,7 +98,7 @@ public class FileLoadingUtil {
 					if (idleDirFull.exists())
 					{
 						fileCount = idleDirFull.list().length;
-					    fileNames = new ArrayList<String>();
+					    fileNames = new ArrayList<>();
 					    for (int i = 1; i <= fileCount; i++)
 					    {
 					    	File test = new File(idleDirFull + "\\Idle" + i + ".png");
@@ -121,7 +119,7 @@ public class FileLoadingUtil {
 					if (jumpDirFull.exists())
 					{
 						fileCount = jumpDirFull.list().length;
-					    fileNames = new ArrayList<String>();
+					    fileNames = new ArrayList<>();
 					    for (int i = 1; i <= fileCount; i++)
 					    {
 					    	File test = new File(jumpDirFull + "\\Jump" + i + ".png");
@@ -137,16 +135,14 @@ public class FileLoadingUtil {
 					}
 				}
 			}
-			myReader.close();
 	    }
 	    catch (FileNotFoundException e)
 	    {
-			System.out.println("An error occurred while reading the sprite file.");
+			System.err.println("An error occurred while reading the sprite file.");
 			e.printStackTrace();
 		}
 	    catch (Exception e)
 	    {
-	    	System.out.println("BRUH");
 	    	e.printStackTrace();
 	    }
 	    Flipbook[] flipbooks = new Flipbook[books.size()];

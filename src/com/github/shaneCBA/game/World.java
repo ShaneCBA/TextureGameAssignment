@@ -1,15 +1,24 @@
 package com.github.shaneCBA.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.drawing.GShape;
 import com.jogamp.opengl.GL2;
 
 public class World implements GShape {
-	static ArrayList<Level> levels;
-	static int currentLevel = 0;
-	
 	static World worldInstance;
+	
+	private List<Level> levels;
+	private int currentLevel = -1;
+		
+	
+	private PlayerController playerController;
+	
+	private World()
+	{
+		levels = new ArrayList<>();
+	}
 	
 	public static World getInstance()
 	{
@@ -18,14 +27,49 @@ public class World implements GShape {
 		return worldInstance;
 	}
 	
-	public static void loadLevels(ArrayList<Level> levels)
+	public void loadLevel(Level level)
 	{
-		World.levels = levels;
+		if (levels.isEmpty())
+		{
+			levels.add(level);
+			//update the player
+			if (playerController != null)
+				worldInstance.nextLevel();
+			else
+				currentLevel++;
+		}
+		else
+			levels.add(level);
+	}
+	
+	public void loadLevels(List<Level> levels)
+	{
+		this.levels = levels;
+	}
+	
+	public void setPlayer(Movable player)
+	{
+		this.playerController = new PlayerController(player, getCurrentLevel());
 	}
 
+	public void nextLevel()
+	{
+		++currentLevel;
+		playerController.setLevel(getCurrentLevel());
+	}
+	
+	public Level getCurrentLevel()
+	{
+		return levels.get(currentLevel);
+	}
+	
+	//level transition
 	@Override
 	public void render(GL2 gl) {
-		// TODO Auto-generated method stub
-		
+		if (playerController != null)
+			playerController.updateMovement();
+		getCurrentLevel().render(gl);
+		if (playerController.getTouchedTiles()[Tile.SIGN.ordinal()])
+			nextLevel();
 	}
 }

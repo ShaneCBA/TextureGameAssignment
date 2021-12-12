@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Keyboard {
 	private static Keyboard instance;
 
-	private static HashMap<Integer, Boolean> keyHash;
+	private HashMap<Integer, Boolean> keyHash;
 	
 	private Keyboard()
 	{
@@ -36,7 +36,7 @@ public class Keyboard {
 	public boolean getKeyDown(char keyChar)
 	{
 		if (keyChar >= 97 && keyChar <= 122)
-			return getKeyDown((int)keyChar - 32);
+			return getKeyDown(keyChar - 32);
 		return getKeyDown((int)keyChar);
 	}
 	public String toString()

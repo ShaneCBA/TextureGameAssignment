@@ -163,8 +163,6 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 			keyboard.setKeyDown(key, true);
 			keyBoard.setCharPressed(e.getKeyChar());
 			keyBoard.setPressReleaseStatus(true);
-
-			((GLUTCanvas) canvas).processKeyBoardEvents(key);
 		}
 
 	}
@@ -175,7 +173,6 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 			int key = e.getKeyCode();
 			keyboard.setKeyDown(key, false);
 			keyBoard.setPressReleaseStatus(false);
-			((GLUTCanvas) canvas).processKeyBoardEventsStop();
 		}
 	}
 

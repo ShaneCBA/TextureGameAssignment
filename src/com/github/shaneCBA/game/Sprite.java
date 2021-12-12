@@ -5,11 +5,11 @@ import static com.jogamp.opengl.GL.GL_TRIANGLE_STRIP;
 import static com.jogamp.opengl.GL2GL3.GL_FILL;
 
 import com.drawing.GShape;
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 
 //Must be provided a flipbook or list of flipbooks
-//TODO Width and height are represented as ints that fit tile sizes
 /**
  * @author shane
  *
@@ -74,78 +74,18 @@ public class Sprite implements GShape
 		this.animations = new Flipbook[]{animation};
 	}
 	
-	public float[] getpositionVector2f() {
+	public float[] getpositionVector3f() {
 		return positionVector3f;
 	}
 
 
-	public void setpositionVector2f(float[] pVector2f) {
+	public void setpositionVector3f(float[] pVector2f) {
 		this.positionVector3f = pVector2f;
 	}
 
-	@Override
-	public void render(GL2 gl) {
-		gl.glPushAttrib(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_ENABLE_BIT);
-		
-		gl.glEnable(GL2.GL_TEXTURE_2D);
-		gl.glEnable(GL2.GL_BLEND);
-
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-		
-		Texture currentTexture = animations[currAnimation].getCurrentFrame();
-
-		currentTexture.enable(gl);
-		currentTexture.bind(gl);
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(positionVector3f[0], positionVector3f[1], positionVector3f[2]);
-		//TODO scale to world tile size
-		
-		if (facingLeft)
-		{
-			gl.glTranslatef(sizeVector2f[0], 0, 0);
-//			gl.glRotatef(180.0f, 0, 1, 0);
-//			gl.glFrontFace(GL_CW);
-		}
-
-
-		gl.glBegin(GL_TRIANGLE_STRIP);
-
-		
-
-		if (facingLeft)
-		{
-			//fix
-			float nX = sizeVector2f[0] - hitboxVector2f[2] +  hitboxVector2f[0] + getWidth();// + getWidth();
-//			gl.glTranslatef(-nX, 0, 0);
-			gl.glTexCoord2f(0, 0);
-			gl.glVertex2f(sizeVector2f[0]-nX, 0f); // v0 bottom right
-			gl.glTexCoord2f(0, 1);
-			gl.glVertex2f(sizeVector2f[0]-nX, sizeVector2f[1]); // v1 top right
-			gl.glTexCoord2f(1, 0);
-			gl.glVertex2f(-nX, 0f); // v2 bottom left
-			gl.glTexCoord2f(1, 1);
-			gl.glVertex2f(-nX, sizeVector2f[1]); // v3 top left
-		}
-		else
-		{
-			gl.glTexCoord2f(1, 0);
-			gl.glVertex2f(sizeVector2f[0], 0f); // v0 bottom right
-			gl.glTexCoord2f(1, 1);
-			gl.glVertex2f(sizeVector2f[0], sizeVector2f[1]); // v1 top right
-			gl.glTexCoord2f(0, 0);
-			gl.glVertex2f(0f, 0f); // v2 bottom left
-			gl.glTexCoord2f(0, 1);
-			gl.glVertex2f(0f, sizeVector2f[1]); // v3 top left
-		}
-
-		gl.glEnd();
-		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		
-		currentTexture.disable(gl);
-		
-		gl.glPopMatrix();
-		gl.glPopAttrib();
+	public void setPos(float x, float y) {
+		this.positionVector3f[0] = x;
+		this.positionVector3f[1] = y;
 	}
 	
 	public Level getWorldInstance() {
@@ -194,5 +134,60 @@ public class Sprite implements GShape
 		this.currAnimation = currAnimation;
 	}
 
+	@Override
+	public void render(GL2 gl) {
+		gl.glPushAttrib(GL.GL_COLOR_BUFFER_BIT | GL2.GL_ENABLE_BIT);
+		
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		gl.glEnable(GL.GL_BLEND);
 
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		
+		Texture currentTexture = animations[currAnimation].getCurrentFrame();
+
+		currentTexture.enable(gl);
+		currentTexture.bind(gl);
+		
+		gl.glPushMatrix();
+		gl.glTranslatef(positionVector3f[0], positionVector3f[1], positionVector3f[2]);
+		
+		if (facingLeft)
+		{
+			gl.glTranslatef(sizeVector2f[0], 0, 0);
+		}
+
+		gl.glBegin(GL_TRIANGLE_STRIP);
+
+		if (facingLeft)
+		{
+			float nX = sizeVector2f[0] - hitboxVector2f[2] +  hitboxVector2f[0] + getWidth();
+			gl.glTexCoord2f(0, 0);
+			gl.glVertex2f(sizeVector2f[0]-nX, 0f); // v0 bottom right
+			gl.glTexCoord2f(0, 1);
+			gl.glVertex2f(sizeVector2f[0]-nX, sizeVector2f[1]); // v1 top right
+			gl.glTexCoord2f(1, 0);
+			gl.glVertex2f(-nX, 0f); // v2 bottom left
+			gl.glTexCoord2f(1, 1);
+			gl.glVertex2f(-nX, sizeVector2f[1]); // v3 top left
+		}
+		else
+		{
+			gl.glTexCoord2f(1, 0);
+			gl.glVertex2f(sizeVector2f[0], 0f); // v0 bottom right
+			gl.glTexCoord2f(1, 1);
+			gl.glVertex2f(sizeVector2f[0], sizeVector2f[1]); // v1 top right
+			gl.glTexCoord2f(0, 0);
+			gl.glVertex2f(0f, 0f); // v2 bottom left
+			gl.glTexCoord2f(0, 1);
+			gl.glVertex2f(0f, sizeVector2f[1]); // v3 top left
+		}
+
+		gl.glEnd();
+		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		
+		currentTexture.disable(gl);
+		
+		gl.glPopMatrix();
+		gl.glPopAttrib();
+	}
 }

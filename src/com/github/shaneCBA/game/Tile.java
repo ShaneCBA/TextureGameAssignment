@@ -14,8 +14,12 @@ public enum Tile {
 	PLATFORM("/world/platform.png", true, Tile.HALFBLOCK),
 	WATER("/world/water.png", true, -1),//-1 for none of the above (for now)
 	SIGN("/world/sign.png", true, Tile.HALFBLOCK);
+
+	public static final int TILESIZE = 24;
 	
-	public static final int BREATHABLE = 0, SOLID = 1, HALFBLOCK = 2;
+	public static final int BREATHABLE = 0;
+	public static final int SOLID = 1;
+	public static final int HALFBLOCK = 2;
 	
 	private String textureFile;
 	private Texture texture;
@@ -46,9 +50,10 @@ public enum Tile {
 			throw new IllegalArgumentException(
 					String.format("Tile - Could not find File Extension"
 							+ "in string \"%s\"", textureFile));
+		
 		//Retrieve the file extension of the textureFile and format it to uppercase;
-		String type = m.group();
-		texture = GTextureUtil.loadTextureProjectDir(textureFile, type);
+		String fileType = m.group();
+		texture = GTextureUtil.loadTextureProjectDir(textureFile, fileType);
 	}
 	boolean getDrawable()
 	{

@@ -3,7 +3,7 @@ package com.github.shaneCBA.game;
 import com.jogamp.opengl.GL2;
 
 public class Movable extends Sprite {
-	private final static float TERMINAL_VEL = -10;
+	private static final float TERMINAL_VEL = -10;
 
 	//Prior position vector
 	private float[] oldPositionVector2f;
@@ -18,7 +18,61 @@ public class Movable extends Sprite {
 		super(position, size, hitboxVector2f, animations);
 		velocityVector2f = new float[] {0f,0f};
 	}
+	
+	public void setXVel(float x)
+	{
+		velocityVector2f[0] = x;
+	}
 
+	public void setYVel(float y) {
+		velocityVector2f[1] = y;
+	}
+
+	public float[] getvVector2() {
+		return velocityVector2f;
+	}
+	
+	public float getOldLeft()
+	{
+		return oldPositionVector2f[0] + hitboxVector2f[0];
+	}
+	public float getOldRight()
+	{
+		return oldPositionVector2f[0] + hitboxVector2f[2];
+	}
+
+	public float getOldBottom()
+	{
+		return oldPositionVector2f[1] + hitboxVector2f[1];
+	}
+	public float getOldTop()
+	{
+		return oldPositionVector2f[1] + hitboxVector2f[3];
+	}
+
+	public boolean[] getTilesTouched() {
+		boolean[] touched = new boolean[Tile.values().length];
+		int gapcount = (int) Math.max(getWidth()/(Tile.TILESIZE/2f), 2f);
+		float gap = getWidth()/gapcount;
+		for (float x = getLeft(); x <= getRight(); x += gap)
+		{
+			int tileId = worldInstance.getTile(x, getBottom()-1).ordinal();
+			if (!touched[tileId])
+				touched[tileId] = true;
+			
+		}
+		return touched;
+	}
+
+	
+	public boolean isGrounded() {
+		return grounded;
+	}
+
+	public void setGrounded(boolean grounded) {
+		this.grounded = grounded;
+	}
+	
 	private boolean checkGrounded()
 	{
 		//If velocity Y is positive, or the previous position of the sprite isn't
@@ -29,7 +83,7 @@ public class Movable extends Sprite {
 		}
 		//Move to constructor or initialization
 		//Used to allow non-tile sized sprites
-		int gapcount = (int) Math.max(getWidth()/(Level.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getWidth()/(Tile.TILESIZE/2f), 2f);
 		float gap = getWidth()/gapcount;
 		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
@@ -46,13 +100,13 @@ public class Movable extends Sprite {
 	{
 		//If velocity Y is negative, or the previous position of the sprite isn't
 		//below the tile, then there was no ceiling collision
-		if (velocityVector2f[1] < 0 || getOldTop() > worldInstance.getTileTop(getTop()) - Level.TILESIZE)
+		if (velocityVector2f[1] < 0 || getOldTop() > worldInstance.getTileTop(getTop()) - Tile.TILESIZE)
 		{
 			return false;
 		}
 		//Move to constructor or initialization
 		//Used to allow non-tile sized sprites
-		int gapcount = (int) Math.max(getWidth()/(Level.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getWidth()/(Tile.TILESIZE/2f), 2f);
 		float gap = getWidth()/gapcount;
 		for (float x = getLeft(); x <= getRight(); x += gap)
 		{
@@ -66,11 +120,11 @@ public class Movable extends Sprite {
 	
 	public boolean checkRight()
 	{
-		if (velocityVector2f[0] < 0 || getOldRight() > worldInstance.getTileRight(getRight()) - Level.TILESIZE)
+		if (velocityVector2f[0] < 0 || getOldRight() > worldInstance.getTileRight(getRight()) - Tile.TILESIZE)
 		{
 			return false;
 		}
-		int gapcount = (int) Math.max(getHeight()/(Level.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getHeight()/(Tile.TILESIZE/2f), 2f);
 		float gap = getHeight()/gapcount;
 		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
@@ -84,11 +138,11 @@ public class Movable extends Sprite {
 	
 	public boolean checkLeft()
 	{
-		if (velocityVector2f[0] > 0 || getOldLeft() < worldInstance.getTileLeft(getLeft()) - Level.TILESIZE)
+		if (velocityVector2f[0] > 0 || getOldLeft() < worldInstance.getTileLeft(getLeft()) - Tile.TILESIZE)
 		{
 			return false;
 		}
-		int gapcount = (int) Math.max(getHeight()/(Level.TILESIZE/2), 2f);
+		int gapcount = (int) Math.max(getHeight()/(Tile.TILESIZE/2f), 2f);
 		float gap = getHeight()/gapcount;
 		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
@@ -100,7 +154,6 @@ public class Movable extends Sprite {
 		return false;
 	}
 	
-	//GL passed for dbug purposes, remove for final
 	private void update()
 	{
 		oldPositionVector2f = positionVector3f.clone();
@@ -159,43 +212,13 @@ public class Movable extends Sprite {
 		}
 	}
 	
-	public void setXVel(float x)
+	public void reset()
 	{
-		velocityVector2f[0] = x;
-	}
-
-	public void setYVel(float y) {
-		velocityVector2f[1] = y;
-	}
-	
-	public boolean isGrounded() {
-		return grounded;
-	}
-
-	public void setGrounded(boolean grounded) {
-		this.grounded = grounded;
-	}
-
-	public float[] getvVector2() {
-		return velocityVector2f;
-	}
-	
-	public float getOldLeft()
-	{
-		return oldPositionVector2f[0] + hitboxVector2f[0];
-	}
-	public float getOldRight()
-	{
-		return oldPositionVector2f[0] + hitboxVector2f[2];
-	}
-
-	public float getOldBottom()
-	{
-		return oldPositionVector2f[1] + hitboxVector2f[1];
-	}
-	public float getOldTop()
-	{
-		return oldPositionVector2f[1] + hitboxVector2f[3];
+		this.velocityVector2f = new float[] {0,0};
+		this.grounded = false;
+		this.wasGrounded = false;
+		this.oldPositionVector2f = null;
+		this.currAnimation = 0;
 	}
 
 	@Override

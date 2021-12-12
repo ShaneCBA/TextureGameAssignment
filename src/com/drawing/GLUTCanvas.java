@@ -2,7 +2,6 @@ package com.drawing;
 
 import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
 import static com.jogamp.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static com.jogamp.opengl.GL.GL_TRIANGLES;
 import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
 import static com.jogamp.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
@@ -14,9 +13,11 @@ import com.github.shaneCBA.game.DebugUtil;
 import com.github.shaneCBA.game.FileLoadingUtil;
 import com.github.shaneCBA.game.Flipbook;
 import com.github.shaneCBA.game.Keyboard;
+import com.github.shaneCBA.game.Level;
 import com.github.shaneCBA.game.Movable;
 import com.github.shaneCBA.game.PlayerController;
-import com.github.shaneCBA.game.Level;
+import com.github.shaneCBA.game.Tile;
+import com.github.shaneCBA.game.World;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -44,8 +45,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	GKeyBoard keyBoard;
 	GMouse mouse;
 
-	GDrawingPoints mousePoints;
-
 	GQuad myQuad;
 
 	// GTriangle learnTriangle;
@@ -57,7 +56,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	ArrayList<GCRect> collisionRects;
 	
 	Movable player;
-	Level world;
+	World world;
 	Keyboard keyboard;
 	PlayerController playerController;
 
@@ -69,7 +68,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		keyboard = Keyboard.getInstance();
 
 		// creating a canvas for drawing
-		// GLCanvas canvas = new GLCanvas(capabilities);
 
 		this.addGLEventListener(this);
 		this.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
@@ -107,26 +105,32 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		// gl.glEnable(GL2.GL_DEPTH_TEST);
 		// gl.glDepthFunc(GL2.GL_LESS);
 
-		mousePoints = new GDrawingPoints(GL_TRIANGLES);
-
 		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
 		//Players z-axis is zero, as everything in the world should be placed relative to the player
-		player = new Movable(new float[] {1*Level.TILESIZE, 2*Level.TILESIZE, 0},
-				new float[] {2*Level.TILESIZE,2*Level.TILESIZE},
-				new float[] {10f, 3f,9f+1*Level.TILESIZE,1.5f*Level.TILESIZE},
+		player = new Movable(new float[] {1*Tile.TILESIZE, 2*Tile.TILESIZE, 0},
+				new float[] {2*Tile.TILESIZE,2*Tile.TILESIZE},
+				new float[] {10f, 3f,9f+1*Tile.TILESIZE,1.5f*Tile.TILESIZE},
 				flipbooks);
 		
 		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
-		world = new Level(tileInts, tileInts[0].length, tileInts.length);
 		
-		world.addEntity(player);
+		Level level1 = new Level(tileInts, tileInts[0].length, tileInts.length,1f*Tile.TILESIZE, 2f*Tile.TILESIZE);
 		
-		playerController = new PlayerController(player, world);
+		tileInts= FileLoadingUtil.readOldWorld("/World/demo2.wd");
+		Level level2 = new Level(tileInts, tileInts[0].length, tileInts.length,1*Tile.TILESIZE, 2*Tile.TILESIZE);
+		
+		level1.addEntity(player);
+
+//		playerController = new PlayerController(player, level1);//move to
+		
+		world = World.getInstance();
+		world.loadLevel(level1);
+		world.loadLevel(level2);
+		world.setPlayer(player); 
 		
 		// adding them all in the arrayList
 		drawingArtObjects = new ArrayList<GShape>();
 		drawingArtObjects.add(world);
-
 	}
 
 
@@ -170,7 +174,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 			GL_Height = DRAWING_HEIGHT / 2.0f / aspect;
 		}
 
-//		myOrigin.updateOriginVertex(GLUTCanvas.GL_Width, GLUTCanvas.GL_Height);
 
 		GLU glu = new GLU();
 		gl.glMatrixMode(GL_PROJECTION); // choose projection matrix
@@ -203,7 +206,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		gl.glDepthFunc(GL2.GL_LEQUAL);
 		gl.glLoadIdentity(); // reset the model-view matrix
 		
-		playerController.updateMovement();
 		
 		for (GShape artObject : drawingArtObjects) {
 			artObject.render(gl);
@@ -222,36 +224,10 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	}
 
 	/**
-	 * This function updates drawing based on keyboard events
-	 */
-	public void processKeyBoardEvents(int key) {
-
-		if (keyBoard.getCharPressed() == 'd' && keyBoard.isPressReleaseStatus() == true) {
-//			player.setXVel(5f);
-		}
-
-		else if (keyBoard.getCharPressed() == 'a' && keyBoard.isPressReleaseStatus() == true) {
-//			player.setXVel(-5f);
-		}
-
-		else if (keyBoard.getCharPressed() == 'c' && keyBoard.isPressReleaseStatus() == true) {
-			this.mousePoints.setDrawingType(GDrawingPoints.XGL_CIRCLE);
-		}
-
-	}
-
-	public void processKeyBoardEventsStop() {
-		keyBoard.setPressReleaseStatus(false);
-	}
-
-	/**
 	 * 
 	 */
 	public void processMouseEvents()
 	{
-		if (mouse.isPressReleaseStatus() == true) {
-			mousePoints.addPoint(mouse.getPointClicked());
-		}
 	}
 
 }

@@ -15,10 +15,12 @@ import com.jogamp.opengl.util.texture.Texture;
  */
 public class Flipbook {
 	private Texture[] pages;
-	private int currentFrame, frameCount;
+	private int currentFrame;
+	private int frameCount;
 	
 	//lastFrameUpdateTime is the time in which the frame was last changed
-	private long lastFrameUpdateTime, lastFrameUpdateCheck;//keep current just in case
+	private long lastFrameUpdateTime;
+	private long lastFrameUpdateCheck;//keep current just in case
 	
 	//duration of each frame in milliseconds
 	private int frameDuration = 85;
@@ -67,8 +69,8 @@ public class Flipbook {
 			}
 			catch (Exception e)
 			{
-				System.out.println("Bad File " + file);
-				System.out.println(m.group(1));
+				System.err.println("Bad File " + file);
+				System.err.println(m.group(1));
 				e.printStackTrace();
 				System.exit(-1);
 			}

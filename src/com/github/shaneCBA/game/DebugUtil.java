@@ -7,6 +7,9 @@ import static com.jogamp.opengl.GL2GL3.GL_LINE;
 import com.jogamp.opengl.GL2;
 
 public class DebugUtil {
+	private DebugUtil()
+	{
+	}
 	public static void debugSquare(GL2 gl, float x, float y)
 	{
 		gl.glPushAttrib(GL2.GL_CURRENT_BIT);
