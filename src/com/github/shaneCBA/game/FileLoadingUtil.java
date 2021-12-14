@@ -58,17 +58,6 @@ public class FileLoadingUtil {
 	    	e.printStackTrace();
 	    }
 	    
-	    System.out.println(spawnX + " , "+spawnY);
-//	    for (int x = 0; x < tempLevel.length; x++)
-//	    {
-//	    	for (int y = 0; y < tempLevel[0].length; y++)
-//	    	{
-//	    		System.out.print(tempLevel[x][y]);
-//	    	}
-//	    	System.out.println();
-//	    }
-	    
-	    
 	    Level level = new Level(tempLevel, tempLevel[0].length, tempLevel.length,spawnX, spawnY);
 		return level;
 	}
