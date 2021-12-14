@@ -12,11 +12,12 @@ public class FileLoadingUtil {
 	
 	public static Level readLevel(String filename)
 	{
+		float spawnX = Tile.TILESIZE;
+		float spawnY = Tile.TILESIZE;
 		
-		
-		String texPath = System.getProperty("user.dir");
+		String defaultPath = System.getProperty("user.dir");
 		int[][] tempLevel = null;
-		File myObj = new File(texPath+filename);
+		File myObj = new File(defaultPath+filename);
 	    try (Scanner myReader=new Scanner(myObj))
 	    {
 			String data;
@@ -36,6 +37,12 @@ public class FileLoadingUtil {
 				for (int i = 0; i < width; i+=1)
 				{
 					char n = data.charAt(i);
+					if (n == 'S')
+					{
+						spawnY *= (height - row - 1);
+						spawnX *= (i);
+						tempLevel[height - row - 1][i] = 0;
+					} else
 					tempLevel[height - row - 1][i] = Character.getNumericValue(n);
 				}
 				row++;
@@ -51,34 +58,60 @@ public class FileLoadingUtil {
 	    	e.printStackTrace();
 	    }
 	    
-	    Level level = new Level(tempLevel, tempLevel[0].length, tempLevel.length,1f*Tile.TILESIZE, 2f*Tile.TILESIZE);
+	    System.out.println(spawnX + " , "+spawnY);
+//	    for (int x = 0; x < tempLevel.length; x++)
+//	    {
+//	    	for (int y = 0; y < tempLevel[0].length; y++)
+//	    	{
+//	    		System.out.print(tempLevel[x][y]);
+//	    	}
+//	    	System.out.println();
+//	    }
+	    
+	    
+	    Level level = new Level(tempLevel, tempLevel[0].length, tempLevel.length,spawnX, spawnY);
 		return level;
 	}
 
 	
-	public static ArrayList<Level> readWorld()
+	public static ArrayList<Level> readWorld(String fileName)
 	{
-		ArrayList<Level> levelsArrayList = new ArrayList<>();
-		
 		String defaultPath = System.getProperty("user.dir");
+		File myObj = new File(defaultPath+fileName);
+		String worldPath = null;
 		
-		File levelsDir = new File(defaultPath+"/World/Levels");
+		try (Scanner myReader = new Scanner(myObj))
+		{
+			worldPath = "\\Worlds\\World" + myReader.nextLine() + "\\";
+		}
+		catch (FileNotFoundException e)
+		{
+			System.err.println("An error occurred while reading the world options file.");
+			e.printStackTrace();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		
+		ArrayList<Level> levels = new ArrayList<>();
+		
+		File levelsDir = new File(defaultPath+worldPath);
 		String levelFileNames[] = levelsDir.list();
 		for (String levelFileName : levelFileNames)
 		{
-			Level levelTemp = readLevel("/World/Levels/" +levelFileName);
-			levelsArrayList.add(levelTemp);
+			Level levelTemp = readLevel(worldPath + levelFileName);
+			levels.add(levelTemp);
 		}
 	
-		return levelsArrayList;
+		return levels;
 	}
 	
 	public static Flipbook[] readSprite(String fileName, String spriteName)
 	{
-		String texPath = System.getProperty("user.dir");
+		String defaultPath = System.getProperty("user.dir");
 		ArrayList<Flipbook> books = new ArrayList<>();
-		File myObj = new File(texPath+fileName);
+		File myObj = new File(defaultPath+fileName);
 	    try (Scanner myReader = new Scanner(myObj))
 	    {
 			String data = null;
@@ -91,8 +124,8 @@ public class FileLoadingUtil {
 				data = myReader.nextLine();
 				if (data.equals("[" + spriteName + "]")) 
 				{
-					File topDir = new File(myReader.nextLine());
-					File topDirFull = new File(texPath + topDir);
+					File topDir = new File("\\Textures\\Sprites\\" + myReader.nextLine());
+					File topDirFull = new File(defaultPath + topDir);
 				
 					//run animation
 					File runDir = new File(topDir.toString() + "/run");

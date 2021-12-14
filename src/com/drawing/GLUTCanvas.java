@@ -90,7 +90,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		gl.glClearColor(.90f, .90f, 1.0f, 1.0f); // color used to clean the canvas
 		gl.glColor3f(1.0f, 1.0f, 1.0f); // drawing color
 
-		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
+		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/Options/sprite.options", "Player");
 		//Players z-axis is zero, as everything in the world should be placed relative to the player
 		player = new Movable(new float[] {1*Tile.TILESIZE, 2*Tile.TILESIZE, 0},
 				new float[] {2*Tile.TILESIZE,2*Tile.TILESIZE},
@@ -98,7 +98,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 				flipbooks);
 		
 		
-		ArrayList<Level> levels = FileLoadingUtil.readWorld();
+		ArrayList<Level> levels = FileLoadingUtil.readWorld("/Options/world.options");
 		levels.get(0).addEntity(player);
 
 		
