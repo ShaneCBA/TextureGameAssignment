@@ -37,7 +37,7 @@ public class FileLoadingUtil {
 				for (int i = 0; i < width; i+=1)
 				{
 					char n = data.charAt(i);
-					if (n == 'S')
+					if (Character.getNumericValue(n) == 5)
 					{
 						spawnY *= (height - row - 1);
 						spawnX *= (i);
