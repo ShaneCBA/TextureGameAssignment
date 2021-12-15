@@ -58,8 +58,7 @@ public class World implements GShape {
 
 	public void setEnemy(Movable enemy)
 	{
-		//50 is a placeholder max distance it can walk
-		this.enemyController = new EnemyController(enemy, getCurrentLevel(), 50); 
+		this.enemyController = new EnemyController(enemy, getCurrentLevel()); 
 	}
 	public void nextLevel()
 	{
