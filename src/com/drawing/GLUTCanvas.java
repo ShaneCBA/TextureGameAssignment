@@ -113,6 +113,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		world = World.getInstance();
 		world.loadLevels(levels);
 		world.setPlayer(player); 
+		world.setEnemy(enemy);
 		
 		// adding them all in the arrayList
 		drawingArtObjects = new ArrayList<GShape>();
