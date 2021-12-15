@@ -178,10 +178,9 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		GLU glu = new GLU();
 		gl.glMatrixMode(GL_PROJECTION); // choose projection matrix
 		gl.glLoadIdentity(); // reset projection matrix
-		// gl.glOrtho(-GL_Width, GL_Width, -GL_Height, GL_Height, -2.0f, 2.0f); // 2D
-//		glu.gluOrtho2D(-GL_Width, GL_Width, -GL_Height, GL_Height); // canvas
 		glu.gluOrtho2D(0, 2*GL_Width, 0, 2*GL_Height); // canvas
-
+//		glu.gluPerspective(90.0f, calc_aspect, 1.0, 40.0);
+//		gl.glTranslatef(world.getCurrentLevel().getWidth()/2, world.getCurrentLevel().getHeight()/2, 0);
 //		 gl.glViewport(0, 0, (int) GL_Width * 2, -(int) GL_Height * 2);
 //		gl.glViewport(-(int) GL_Width, (int) GL_Width, -(int) GL_Height, (int) GL_Height);
 
@@ -193,24 +192,77 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 	}
 
+	public void setToOrthoView()
+	{
+		GLU glu = new GLU();
+//		gl.glMatrixMode(GL_PROJECTION); // choose projection matrix
+//		gl.glLoadIdentity(); // reset projection matrix
+	}
+
+	public void setToPerspectiveView(GL2 gl)
+	{
+		GLU glu = new GLU();
+		gl.glViewport(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+		gl.glMatrixMode(GL_PROJECTION); // choose projection matrix
+		gl.glLoadIdentity(); // reset projection matrix
+		float calc_aspect = DRAWING_WIDTH / DRAWING_HEIGHT;
+		glu.gluPerspective(90f, calc_aspect, 1.0, 1000.0);
+
+
+		gl.glMatrixMode(GL_MODELVIEW); // specify coordinates
+		gl.glLoadIdentity(); // reset
+	}
+
+	void init3DProjectionMatrix(final GL2 gl) {
+		
+
+		float width = GLUTCanvas.CANVAS_WIDTH;
+		float height = GLUTCanvas.CANVAS_HEIGHT;
+		if (height < 1)
+			height = 1;
+		// this is the new aspect ratio based on the resize
+		float calc_aspect = (float) width / (float) height;
+		GLU glu = new GLU();
+
+		// gl.glViewport(0, 0, WINDOW_W, WINDOW_H);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+
+
+		glu.gluPerspective(90.0f, calc_aspect, 1.0, 40.0);
+
+		// camera position, looking at location, axis
+		// glu.gluLookAt(0, 0, 1.0f, 1.5f, 0, -12f, 0, 1, 0);
+
+		// gl.glClearDepth(20.0f); // set clear depth value to farthest
+		gl.glEnable(GL2.GL_DEPTH_TEST); // enables depth testing
+		gl.glDepthFunc(GL2.GL_LEQUAL); // the type of depth test to do
+		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); // best perspective correction
+		gl.glShadeModel(GL2.GL_SMOOTH); // blends colors nicely, and smoothes out lighting
+
+		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // background color: white
+
+		// Enable the model-view transform
+		gl.glMatrixMode(GL_MODELVIEW); // specify coordinates
+		gl.glLoadIdentity(); // reset
+	}
 	/**
 	 * Called back by the animator to perform rendering.
 	 */
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2(); // get the OpenGL 2 graphics context
+		
+		setToPerspectiveView(gl);
 
 		gl.glClearColor(.90f, .90f, 1.0f, 1.0f); // color used to clean the canvas
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the canvas with color
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL2.GL_LEQUAL);
-		gl.glLoadIdentity(); // reset the model-view matrix
-		
-		
+		gl.glClearDepth(20.0f); // set clear depth value to farthest
+
+		gl.glTranslatef(-world.getCurrentLevel().getWidth()/2, -world.getCurrentLevel().getHeight()/2, -175);
 		for (GShape artObject : drawingArtObjects) {
 			artObject.render(gl);
 		}
-		DebugUtil.debugSquare(gl, 0, 0);
 
 		gl.glFlush();
 	}

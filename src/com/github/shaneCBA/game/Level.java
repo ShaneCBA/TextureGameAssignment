@@ -13,8 +13,6 @@ import com.jogamp.opengl.util.texture.Texture;
 
 public class Level implements GShape {
 	
-	private static final boolean DEBUG = false;
-	
 	public static final float GRAVITY = 0.5f;
 	
 	private Tile[][] tiles;
@@ -125,7 +123,7 @@ public class Level implements GShape {
 		int tileX = (int) (x/Tile.TILESIZE);
 		if (tileX >= width || tileX < 0 || tileY >= height || tileY < 0)
 		{
-			return Tile.AIR;
+			return Tile.DIRT;
 		}
 		return this.tiles[tileY][tileX];
 	}
@@ -143,6 +141,14 @@ public class Level implements GShape {
 		return spawnY;
 	}
 	
+	public int getWidth() {
+		return width * Tile.TILESIZE;
+	}
+
+	public int getHeight() {
+		return height * Tile.TILESIZE;
+	}
+
 	@Override
 	public void render(GL2 gl) {
 		for (int y = 0; y < height; y++)
