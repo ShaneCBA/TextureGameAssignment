@@ -1,12 +1,12 @@
 # Grid Game
 CS460 Texture Assignment
 
-*[EDITOR](https://jsfiddle.net/ShaneCBA/zb36hqc4/101/)*
+*[EDITOR](https://jsfiddle.net/ShaneCBA/zb36hqc4/)*
 
 
 ## GOALS
- - [ ] Create an engine to display sprites and tiles
- - [ ] Figure out what should and shouldn't be loaded from the file
+ - [x] Create an engine to display sprites and tiles
+ - [x] Figure out what should and shouldn't be loaded from the file
  - [ ] Figure what the game will actually be?
  - [ ] Add collision to character(s)
  
