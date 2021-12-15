@@ -107,6 +107,8 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		
 		
 		ArrayList<Level> levels = FileLoadingUtil.readWorld("/Options/world.options");
+		levels.get(0).addEntity(player);
+		levels.get(0).addEntity(enemy);
 		
 		world = World.getInstance();
 		world.loadLevels(levels);
