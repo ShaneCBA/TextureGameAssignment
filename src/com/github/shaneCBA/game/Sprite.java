@@ -143,6 +143,7 @@ public class Sprite implements GShape
 	public void render(GL2 gl) {
 		gl.glPushAttrib(GL.GL_COLOR_BUFFER_BIT | GL2.GL_ENABLE_BIT | GL2.GL_TEXTURE_BIT);
 		
+		gl.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 		gl.glEnable(GL.GL_BLEND);
 

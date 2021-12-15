@@ -99,20 +99,21 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 				playerFlipbooks);
 		
 		
-//		Flipbook[] enemyFlipbooks = FileLoadingUtil.readSprite("/Options/sprite.options", "Enemy");
-//		enemy = new Movable(new float[] {1*Tile.TILESIZE, 2*Tile.TILESIZE, 0},
-//				new float[] {2*Tile.TILESIZE,2*Tile.TILESIZE},
-//				new float[] {10f, 3f,9f+1*Tile.TILESIZE,1.5f*Tile.TILESIZE},
-//				enemyFlipbooks);
+		Flipbook[] enemyFlipbooks = FileLoadingUtil.readSprite("/Options/sprite.options", "Enemy");
+		enemy = new Movable(new float[] {1*Tile.TILESIZE, 2*Tile.TILESIZE, 0},
+				new float[] {2*Tile.TILESIZE,2*Tile.TILESIZE},
+				new float[] {10f, 3f,9f+1*Tile.TILESIZE,1.5f*Tile.TILESIZE},
+				enemyFlipbooks);
 		
 		
 		ArrayList<Level> levels = FileLoadingUtil.readWorld("/Options/world.options");
 		levels.get(0).addEntity(player);
-//		levels.get(0).addEntity(enemy);
+		levels.get(0).addEntity(enemy);
 		
 		world = World.getInstance();
 		world.loadLevels(levels);
 		world.setPlayer(player); 
+		
 		// adding them all in the arrayList
 		drawingArtObjects = new ArrayList<GShape>();
 		drawingArtObjects.add(world);
