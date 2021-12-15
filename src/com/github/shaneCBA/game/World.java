@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.drawing.GShape;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.glu.GLU;
 
 public class World implements GShape {
 	private static final int TRANSITION_LENGTH = 1000;//In milliseconds
@@ -56,11 +55,13 @@ public class World implements GShape {
 	
 	public void setPlayer(Movable player)
 	{
+		levels.get(currentLevel).addEntity(player);
 		this.playerController = new PlayerController(player, getCurrentLevel());
 	}
 
 	public void setEnemy(Movable enemy)
 	{
+		levels.get(currentLevel).addEntity(enemy);
 		this.enemyController = new EnemyController(enemy, getCurrentLevel()); 
 	}
 	public void nextLevel()

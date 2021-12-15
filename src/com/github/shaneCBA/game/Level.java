@@ -50,6 +50,11 @@ public class Level implements GShape {
 		}
 		entities = new ArrayList<>();
 	}
+	public Level()
+	{
+		entities = new ArrayList<>();
+	}
+
 	public void addEntity(Sprite entity)
 	{		
 		entities.add(entity);
@@ -148,6 +153,39 @@ public class Level implements GShape {
 
 	public int getHeight() {
 		return height * Tile.TILESIZE;
+	}
+	
+
+	public void setTiles(int[][] tiles)
+	{
+		this.tiles = new Tile[height][width];
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				this.tiles[y][x] = Tile.values()[tiles[y][x]];
+			}
+		}
+	}
+
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	public void setHeight(int height)
+	{
+		this.height = height;
+	}
+
+	public void setSpawnX(float spawnX)
+	{
+		this.spawnX = spawnX;
+	}
+
+	public void setSpawnY(float spawnY)
+	{
+		this.spawnY = spawnY;
 	}
 
 	@Override

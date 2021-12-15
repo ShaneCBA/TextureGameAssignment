@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileLoadingUtil {
-	private FileLoadingUtil()
-	{
-	}
+	public FileLoadingUtil() {}
 	
 	public static Level readLevel(String filename)
 	{
-		float spawnX = Tile.TILESIZE;
-		float spawnY = Tile.TILESIZE;
-		
+		Level level = new Level(); 
 		String defaultPath = System.getProperty("user.dir");
 		int[][] tempLevel = null;
 		File myObj = new File(defaultPath+filename);
@@ -39,14 +35,19 @@ public class FileLoadingUtil {
 					char n = data.charAt(i);
 					if (Character.getNumericValue(n) == 5)
 					{
-						spawnY *= (height - row - 1);
-						spawnX *= (i);
+						
+						level.setSpawnX(Tile.TILESIZE * (i));
+						level.setSpawnY(Tile.TILESIZE * (height - row - 1));
 						tempLevel[height - row - 1][i] = 0;
 					} else
 					tempLevel[height - row - 1][i] = Character.getNumericValue(n);
 				}
 				row++;
 			}
+			
+			level.setHeight(height);
+			level.setWidth(width);
+			level.setTiles(tempLevel);
 		}
 	    catch (FileNotFoundException e)
 	    {
@@ -57,8 +58,6 @@ public class FileLoadingUtil {
 	    {
 	    	e.printStackTrace();
 	    }
-	    
-	    Level level = new Level(tempLevel, tempLevel[0].length, tempLevel.length,spawnX, spawnY);
 		return level;
 	}
 
