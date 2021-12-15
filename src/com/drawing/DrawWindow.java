@@ -216,7 +216,7 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 
 
 		try {
-			String iconPath = "/world/CodeKit.png";
+			String iconPath = "/Textures/CodeKit.png";
 			String texPath = System.getProperty("user.dir") + iconPath;
 			Image im = null;
 			// for windows and macOS

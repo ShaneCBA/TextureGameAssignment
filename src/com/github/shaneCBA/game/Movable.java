@@ -14,6 +14,10 @@ public class Movable extends Sprite {
 	private boolean grounded;
 	private boolean wasGrounded;
 
+	private boolean oldCheckLeft;
+
+	private boolean oldCheckRight;
+
 	public Movable(float[] position, float[] size, float[] hitboxVector2f, Flipbook[] animations) {
 		super(position, size, hitboxVector2f, animations);
 		velocityVector2f = new float[] {0f,0f};
@@ -202,16 +206,41 @@ public class Movable extends Sprite {
 		}
 		if (checkRight())
 		{
+			setOldCheckRight(checkRight());
+			setOldCheckLeft(checkLeft());
 			positionVector3f[0] = TileUtil.getTileLeft(getRight()) - getWidth() - hitboxVector2f[0]-1;
 			velocityVector2f[0] = 0;
 		}
 		else if (checkLeft())
 		{
+			setOldCheckRight(checkRight());
+			setOldCheckLeft(checkLeft());
 			positionVector3f[0] = TileUtil.getTileRight(getLeft()) - hitboxVector2f[0]+1;
 			velocityVector2f[0] = 0;
 		}
 	}
 	
+	private void setOldCheckRight(boolean checkRight)
+	{
+		this.oldCheckRight = checkRight;
+	}
+
+	private void setOldCheckLeft(boolean checkLeft)
+	{
+		this.oldCheckLeft = checkLeft;
+	}
+	
+
+	public boolean getOldCheckLeft()
+	{
+		return oldCheckLeft;
+	}
+
+	public boolean getOldCheckRight()
+	{
+		return oldCheckRight;
+	}
+
 	public void reset()
 	{
 		this.velocityVector2f = new float[] {0,0};

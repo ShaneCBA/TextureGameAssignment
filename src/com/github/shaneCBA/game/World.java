@@ -17,6 +17,7 @@ public class World implements GShape {
 	private long transitionStart = 0;
 	
 	private PlayerController playerController;
+	private EnemyController enemyController;
 	
 	private World()
 	{
@@ -47,7 +48,10 @@ public class World implements GShape {
 	
 	public void loadLevels(List<Level> levels)
 	{
-		this.levels = levels;
+		for (Level level : levels)
+		{
+			loadLevel(level);
+		}
 	}
 	
 	public void setPlayer(Movable player)
@@ -55,6 +59,10 @@ public class World implements GShape {
 		this.playerController = new PlayerController(player, getCurrentLevel());
 	}
 
+	public void setEnemy(Movable enemy)
+	{
+		this.enemyController = new EnemyController(enemy, getCurrentLevel()); 
+	}
 	public void nextLevel()
 	{
 		if (++currentLevel != 0)
@@ -89,6 +97,8 @@ public class World implements GShape {
 
 		if (playerController != null)
 			playerController.updateMovement();
+		if (enemyController != null)
+			enemyController.updateMovement();
 		getCurrentLevel().render(gl);
 		if (transitionStart != 0)
 		{

@@ -10,10 +10,10 @@ import com.jogamp.opengl.util.texture.Texture;
 
 public enum Tile {
 	AIR(null, false, Tile.BREATHABLE),
-	DIRT("/world/dirt.png", true),
-	PLATFORM("/world/platform.png", true, Tile.HALFBLOCK),
-	WATER("/world/water.png", true, -1),//-1 for none of the above (for now)
-	SIGN("/world/sign.png", true, Tile.HALFBLOCK);
+	DIRT("/textures/tiles/dirt.png", true),
+	PLATFORM("/textures/tiles/platform.png", true, Tile.HALFBLOCK),
+	WATER("/textures/tiles/water.png", true, -1),//-1 for none of the above (for now)
+	SIGN("/textures/tiles/sign.png", true, Tile.HALFBLOCK);
 
 	public static final int TILESIZE = 24;
 	

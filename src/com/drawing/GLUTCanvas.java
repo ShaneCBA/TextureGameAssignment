@@ -41,21 +41,11 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 	public static final float DRAWING_WIDTH = 550f, DRAWING_HEIGHT = 350f;
 	public static float GL_Width, GL_Height;
 	// Setup OpenGL Graphics Renderer
-//	GDrawOrigin myOrigin;
-	GKeyBoard keyBoard;
-	GMouse mouse;
-
-	GQuad myQuad;
-
-	// GTriangle learnTriangle;
-
-	GPatch myPatch;
-	GSpriteKey spriteCharacter;
 
 	ArrayList<GShape> drawingArtObjects;
-	ArrayList<GCRect> collisionRects;
 	
 	Movable player;
+	Movable enemy;
 	World world;
 	Keyboard keyboard;
 	PlayerController playerController;
@@ -71,8 +61,6 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 		this.addGLEventListener(this);
 		this.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
-		this.keyBoard = kb;
-		this.mouse = mouse;
 	}
 
 	// ------ Implement methods declared in GLEventListener ------
@@ -102,31 +90,30 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 		gl.glClearColor(.90f, .90f, 1.0f, 1.0f); // color used to clean the canvas
 		gl.glColor3f(1.0f, 1.0f, 1.0f); // drawing color
-		// gl.glEnable(GL2.GL_DEPTH_TEST);
-		// gl.glDepthFunc(GL2.GL_LESS);
 
-		Flipbook[] flipbooks = FileLoadingUtil.readSprite("/World/sprite.data", "Player");
+		Flipbook[] playerFlipbooks = FileLoadingUtil.readSprite("/Options/sprite.options", "Player");
 		//Players z-axis is zero, as everything in the world should be placed relative to the player
 		player = new Movable(new float[] {1*Tile.TILESIZE, 2*Tile.TILESIZE, 0},
 				new float[] {2*Tile.TILESIZE,2*Tile.TILESIZE},
 				new float[] {10f, 3f,9f+1*Tile.TILESIZE,1.5f*Tile.TILESIZE},
-				flipbooks);
+				playerFlipbooks);
 		
-		int[][] tileInts= FileLoadingUtil.readOldWorld("/World/demo.wd");
 		
-		Level level1 = new Level(tileInts, tileInts[0].length, tileInts.length,1f*Tile.TILESIZE, 2f*Tile.TILESIZE);
+		Flipbook[] enemyFlipbooks = FileLoadingUtil.readSprite("/Options/sprite.options", "Enemy");
+		enemy = new Movable(new float[] {1*Tile.TILESIZE, 2*Tile.TILESIZE, 0},
+				new float[] {2*Tile.TILESIZE,2*Tile.TILESIZE},
+				new float[] {10f, 3f,9f+1*Tile.TILESIZE,1.5f*Tile.TILESIZE},
+				enemyFlipbooks);
 		
-		tileInts= FileLoadingUtil.readOldWorld("/World/demo2.wd");
-		Level level2 = new Level(tileInts, tileInts[0].length, tileInts.length,1*Tile.TILESIZE, 2*Tile.TILESIZE);
 		
-		level1.addEntity(player);
-
-//		playerController = new PlayerController(player, level1);//move to
+		ArrayList<Level> levels = FileLoadingUtil.readWorld("/Options/world.options");
+		levels.get(0).addEntity(player);
+		levels.get(0).addEntity(enemy);
 		
 		world = World.getInstance();
-		world.loadLevel(level1);
-		world.loadLevel(level2);
+		world.loadLevels(levels);
 		world.setPlayer(player); 
+		world.setEnemy(enemy);
 		
 		// adding them all in the arrayList
 		drawingArtObjects = new ArrayList<GShape>();
@@ -179,13 +166,7 @@ class GLUTCanvas extends GLCanvas implements GLEventListener {
 		gl.glMatrixMode(GL_PROJECTION); // choose projection matrix
 		gl.glLoadIdentity(); // reset projection matrix
 		glu.gluOrtho2D(0, 2*GL_Width, 0, 2*GL_Height); // canvas
-//		glu.gluPerspective(90.0f, calc_aspect, 1.0, 40.0);
-//		gl.glTranslatef(world.getCurrentLevel().getWidth()/2, world.getCurrentLevel().getHeight()/2, 0);
-//		 gl.glViewport(0, 0, (int) GL_Width * 2, -(int) GL_Height * 2);
-//		gl.glViewport(-(int) GL_Width, (int) GL_Width, -(int) GL_Height, (int) GL_Height);
 
-		// gl.glEnable(GL2.GL_DEPTH_TEST);
-		// gl.glDepthFunc(GL2.GL_LESS);
 		// Enable the model-view transform
 		gl.glMatrixMode(GL_MODELVIEW); // specify coordinates
 		gl.glLoadIdentity(); // reset
