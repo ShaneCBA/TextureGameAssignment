@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 public class TileUtil {
 	private TileUtil()
@@ -7,7 +7,7 @@ public class TileUtil {
 	
 	static float getTileBottom(float y)
 	{
-		int tileY = (int) (y/Tile.TILESIZE);
+		int tileY = (int) Math.floor(y/Tile.TILESIZE);
 		return (float) tileY*Tile.TILESIZE;
 	}
 	
@@ -18,7 +18,7 @@ public class TileUtil {
 	
 	static float getTileLeft(float x)
 	{
-		int tileX = (int) (x/Tile.TILESIZE);
+		int tileX = (int) Math.floor(x/Tile.TILESIZE);
 		return (float) tileX*Tile.TILESIZE;
 	}
 	

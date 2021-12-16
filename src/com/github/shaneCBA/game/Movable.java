@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 import com.jogamp.opengl.GL2;
 
@@ -17,6 +17,8 @@ public class Movable extends Sprite {
 	private boolean oldCheckLeft;
 
 	private boolean oldCheckRight;
+
+	private boolean[] tilesTouched;
 
 	public Movable(float[] position, float[] size, float[] hitboxVector2f, Flipbook[] animations) {
 		super(position, size, hitboxVector2f, animations);
@@ -54,18 +56,27 @@ public class Movable extends Sprite {
 		return oldPositionVector2f[1] + hitboxVector2f[3];
 	}
 
-	public boolean[] getTilesTouched() {
+	public void updateTilesTouched() {
 		boolean[] touched = new boolean[Tile.values().length];
 		int gapcount = (int) Math.max(getWidth()/(Tile.TILESIZE/2f), 2f);
-		float gap = getWidth()/gapcount;
-		for (float x = getLeft(); x <= getRight(); x += gap)
+		float gapX = getWidth()/gapcount;
+		gapcount = (int) Math.max(getHeight()/(Tile.TILESIZE/2f), 2f);
+		float gapY = getHeight()/gapcount;
+		for (float x = getLeft(); x <= getRight(); x += gapX)
 		{
-			int tileId = levelInstance.getTile(x, getBottom()-1).ordinal();
-			if (!touched[tileId])
-				touched[tileId] = true;
+			for (float y = getBottom(); y <= getTop(); y += gapY)
+			{
+				int tileId = levelInstance.getTile(x, y).ordinal();
+					if (!touched[tileId])
+						touched[tileId] = true;
+			}
 			
 		}
-		return touched;
+		this.tilesTouched = touched;
+	}
+
+	public boolean[] getTilesTouched() {
+		return tilesTouched;
 	}
 
 	
@@ -132,7 +143,7 @@ public class Movable extends Sprite {
 		float gap = getHeight()/gapcount;
 		for (float y = getBottom(); y <= getTop(); y += gap)
 		{
-			if (levelInstance.getTile(getRight(), y).getType() == Tile.SOLID)
+			if (levelInstance.getTile(getRight()+1, y).getType() == Tile.SOLID)
 			{
 				return true;
 			}
@@ -160,6 +171,10 @@ public class Movable extends Sprite {
 	
 	private void update()
 	{
+		if (World.getInstance().isPause())
+		{
+			return;
+		}
 		oldPositionVector2f = positionVector3f.clone();
 		wasGrounded = grounded;
 		
@@ -253,12 +268,9 @@ public class Movable extends Sprite {
 	@Override
 	public void render(GL2 gl)
 	{
+		updateTilesTouched();
 		update();
 		super.render(gl);
-		DebugUtil.debugSquare(gl, getLeft(), getBottom());
-		DebugUtil.debugSquare(gl, getRight(), getBottom());
-		DebugUtil.debugSquare(gl, getLeft(), getTop());
-		DebugUtil.debugSquare(gl, getRight(), getTop());
 	}
 
 }

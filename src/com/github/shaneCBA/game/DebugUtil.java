@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
 import static com.jogamp.opengl.GL.GL_LINE_LOOP;

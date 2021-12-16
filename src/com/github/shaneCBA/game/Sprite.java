@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
 import static com.jogamp.opengl.GL.GL_TRIANGLE_STRIP;
@@ -89,8 +89,8 @@ public class Sprite implements GShape
 	}
 
 	public void setPos(float x, float y) {
-		this.positionVector3f[0] = x;
-		this.positionVector3f[1] = y;
+		this.positionVector3f[0] = x - this.hitboxVector2f[0];
+		this.positionVector3f[1] = y - this.hitboxVector2f[1];
 	}
 	
 	public Level getWorldInstance() {
@@ -98,7 +98,7 @@ public class Sprite implements GShape
 	}
 
 
-	public void setWorldInstance(Level worldInstance) {
+	public void setLevelInstance(Level worldInstance) {
 		this.levelInstance = worldInstance;
 	}
 

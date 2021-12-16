@@ -9,15 +9,15 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import com.github.shaneCBA.game.DebugUtil;
-import com.github.shaneCBA.game.FileLoadingUtil;
-import com.github.shaneCBA.game.Flipbook;
-import com.github.shaneCBA.game.Keyboard;
-import com.github.shaneCBA.game.Level;
-import com.github.shaneCBA.game.Movable;
-import com.github.shaneCBA.game.PlayerController;
-import com.github.shaneCBA.game.Tile;
-import com.github.shaneCBA.game.World;
+import com.github.shanecba.game.DebugUtil;
+import com.github.shanecba.game.FileLoadingUtil;
+import com.github.shanecba.game.Flipbook;
+import com.github.shanecba.game.Keyboard;
+import com.github.shanecba.game.Level;
+import com.github.shanecba.game.Movable;
+import com.github.shanecba.game.PlayerController;
+import com.github.shanecba.game.Tile;
+import com.github.shanecba.game.World;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -33,6 +33,7 @@ import com.jogamp.opengl.glu.GLU;
 * graphics.
 */
 @SuppressWarnings("serial")
+public
 class GLUTCanvas extends GLCanvas implements GLEventListener {
 
 	public static int CANVAS_WIDTH = 1100; // width of the drawable

@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

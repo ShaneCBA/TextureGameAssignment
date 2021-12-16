@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 import static com.jogamp.opengl.GL.GL_FRONT_AND_BACK;
 import static com.jogamp.opengl.GL.GL_TRIANGLE_STRIP;
@@ -54,7 +54,11 @@ public class Level implements GShape {
 	{		
 		entities.add(entity);
 		entity.setCurrAnimation(entity.IDLE);
-		entity.setWorldInstance(this);
+		entity.setLevelInstance(this);
+	}
+	public void removeEntity(Sprite entity)
+	{		
+		entities.remove(entity);
 	}
 	
 	private void drawTile(GL2 gl, int x, int y)
@@ -111,7 +115,7 @@ public class Level implements GShape {
 	{
 		int tileX = (int) (x/Tile.TILESIZE);
 		int tileY = (int) (y/Tile.TILESIZE);
-		if (tileX >= width || tileX < 0 || tileY >= height || tileY < 0)
+		if (tileX >= width || tileX < 0 || tileY < 0)
 		{
 			return true;
 		}
@@ -120,9 +124,9 @@ public class Level implements GShape {
 	
 	public Tile getTile(float x, float y)
 	{
-		int tileY = (int) (y/Tile.TILESIZE);
-		int tileX = (int) (x/Tile.TILESIZE);
-		if (tileX >= width || tileX < 0 || tileY >= height || tileY < 0)
+		int tileY = (int) Math.floor(y/Tile.TILESIZE);
+		int tileX = (int) Math.floor(x/Tile.TILESIZE);
+		if (tileX >= width || tileX < 0 || tileY < 0)
 		{
 			return Tile.DIRT;
 		}

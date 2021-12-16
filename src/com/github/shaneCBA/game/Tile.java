@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +13,7 @@ public enum Tile {
 	DIRT("/textures/tiles/dirt.png", true),
 	PLATFORM("/textures/tiles/platform.png", true, Tile.HALFBLOCK),
 	WATER("/textures/tiles/water.png", true, -1),//-1 for none of the above (for now)
-	SIGN("/textures/tiles/sign.png", true, Tile.HALFBLOCK);
+	SIGN("/textures/tiles/sign.png", true, Tile.BREATHABLE);
 
 	public static final int TILESIZE = 24;
 	

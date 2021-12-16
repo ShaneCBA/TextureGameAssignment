@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 public class PlayerController {
 	public static final int RUN = 0;
@@ -32,9 +32,14 @@ public class PlayerController {
 	}
 
 	public void setLevel(Level level) {
-		this.level = level;
+		if (this.level != level)
+		{
+			this.level.removeEntity(player);
+			level.addEntity(player);
+			this.level = level;
+			player.reset();
+		}
 		player.reset();
-		level.addEntity(player);
 		respawn();
 	}
 	
@@ -91,6 +96,8 @@ public class PlayerController {
 		float x = this.level.getSpawnX();
 		float y = this.level.getSpawnY();
 		this.player.setPos(x, y);
+		this.player.reset();
+		player.updateTilesTouched();
 	}
 }
 	

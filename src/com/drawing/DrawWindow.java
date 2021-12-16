@@ -70,7 +70,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.github.shaneCBA.game.Keyboard;
+import com.github.shanecba.game.Keyboard;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
@@ -96,8 +96,10 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 	GKeyBoard keyBoard;
 	Keyboard keyboard;
 	GMouse mouse;
+	
+	private static DrawWindow instance;
 
-	DrawWindow() {
+	private DrawWindow() {
 
 		mouse = new GMouse();
 		keyBoard = new GKeyBoard();
@@ -136,6 +138,13 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 			}
 		});
 
+	}
+	
+	public static DrawWindow getInstance()
+	{
+		if (instance == null)
+			instance = new DrawWindow();
+		return instance;
 	}
 
 	public void startGame() {
@@ -212,7 +221,7 @@ public class DrawWindow extends Frame implements KeyListener, MouseListener {
 	// create a window and start the drawing loop
 	public static void main(String[] args) {
 
-		DrawWindow game = new DrawWindow();
+		DrawWindow game = DrawWindow.getInstance();
 
 
 		try {

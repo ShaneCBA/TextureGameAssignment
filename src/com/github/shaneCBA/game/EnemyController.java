@@ -1,4 +1,4 @@
-package com.github.shaneCBA.game;
+package com.github.shanecba.game;
 
 public class EnemyController {
 	public static final int RUN = 0;
@@ -65,4 +65,3 @@ public class EnemyController {
 		}
 	}
 }
-	
